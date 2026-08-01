@@ -1,0 +1,198 @@
+/* =========================
+   GLOBAL
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #0a0a0a;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 60px;
+    border-bottom: 1px solid #1d1d1d;
+}
+
+nav h1 {
+    font-size: 28px;
+    color: #00ff88;
+    letter-spacing: 1px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 25px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #00ff88;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.hero {
+    text-align: center;
+    padding: 120px 20px 80px;
+}
+
+.hero h2 {
+    font-size: 72px;
+    margin-bottom: 20px;
+    line-height: 1.1;
+}
+
+.hero p {
+    color: #9d9d9d;
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+button {
+    background: #00ff88;
+    color: black;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(0,255,136,0.4);
+}
+
+/* =========================
+   ONLY TOGGLE
+========================= */
+
+.only-toggle {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 40px 20px 70px;
+}
+
+.toggle-item {
+    background: #151515;
+    border: 1px solid #222;
+    padding: 14px 24px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.toggle-item:hover {
+    color: #00ff88;
+    background: #1b1b1b;
+    animation: shake 0.35s ease;
+}
+
+.toggle-item.active {
+    background: #00ff88;
+    color: black;
+    font-weight: bold;
+}
+
+/* =========================
+   SHAKE EFFECT
+========================= */
+
+@keyframes shake {
+    0% { transform: translateX(0px); }
+    25% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+    75% { transform: translateX(-2px); }
+    100% { transform: translateX(0px); }
+}
+
+/* =========================
+   FEATURE CARDS
+========================= */
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    padding: 0 60px 80px;
+}
+
+.card {
+    background: #151515;
+    border: 1px solid #222;
+    border-radius: 20px;
+    padding: 30px;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    border-color: #00ff88;
+    box-shadow: 0 0 25px rgba(0,255,136,0.15);
+}
+
+.card h3 {
+    color: #00ff88;
+    margin-bottom: 12px;
+    font-size: 22px;
+}
+
+.card p {
+    color: #b0b0b0;
+    line-height: 1.6;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    nav {
+        padding: 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .hero {
+        padding: 80px 20px 50px;
+    }
+
+    .hero h2 {
+        font-size: 42px;
+    }
+
+    .hero p {
+        font-size: 18px;
+    }
+
+    .features {
+        padding: 0 20px 60px;
+    }
+}

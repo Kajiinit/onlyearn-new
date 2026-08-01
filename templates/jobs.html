@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OnlyJobs</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<nav>
+    <h1>OnlyEarn</h1>
+    <a href="/post-job">Post Job</a>
+    <a href="/dashboard">Dashboard</a>
+</nav>
+
+<section class="features">
+
+    {% for job in jobs %}
+
+    <div class="card">
+        <h3>{{ job[1] }}</h3>
+        <p>{{ job[2] }}</p>
+        <p><b>{{ job[3] }}</b></p>
+        <small>Posted by {{ job[4] }}</small>
+
+        <br><br>
+
+        <a href="/apply/{{ job[0] }}">
+            <button>Apply Only</button>
+        </a>
+
+        <a href="/applicants/{{ job[0] }}">
+            <button>View Applicants</button>
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+</section>
+
+</body>
+</html>

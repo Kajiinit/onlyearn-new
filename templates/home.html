@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OnlyEarn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<!-- CURTAINS -->
+<div class="curtain left"></div>
+<div class="curtain right"></div>
+
+<!-- NAV -->
+<nav>
+    <h1>OnlyEarn</h1>
+    <div>
+        <a href="/login">OnlyLogin</a>
+        <a href="/register">OnlyJoin</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <h2>Your Skills. Your Income.</h2>
+    <p>Only Work. Only Earnings.</p>
+    <button>Start OnlyEarn</button>
+</section>
+
+<!-- TOGGLE -->
+<div class="only-toggle">
+    <div class="toggle-item active">OnlyJobs</div>
+    <div class="toggle-item">OnlyHire</div>
+    <div class="toggle-item">OnlyChat</div>
+    <div class="toggle-item">OnlyPay</div>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+
+    <div class="card">
+        <h3>OnlyJobs</h3>
+        <p>Find opportunities instantly.</p>
+    </div>
+
+    <div class="card">
+        <h3>OnlyHire</h3>
+        <p>Hire verified talent.</p>
+    </div>
+
+    <div class="card">
+        <h3>OnlyChat</h3>
+        <p>Talk instantly with earners.</p>
+    </div>
+
+    <div class="card">
+        <h3>OnlyPay</h3>
+        <p>Secure escrow payments.</p>
+    </div>
+
+</section>
+
+<!-- SCRIPT -->
+<script>
+const items = document.querySelectorAll(".toggle-item");
+const curtains = document.querySelectorAll(".curtain");
+
+items.forEach(item => {
+    item.addEventListener("click", () => {
+
+        items.forEach(i => i.classList.remove("active"));
+        item.classList.add("active");
+
+        curtains.forEach(c => c.classList.add("open"));
+
+        setTimeout(() => {
+            curtains.forEach(c => c.classList.remove("open"));
+        }, 900);
+
+    });
+});
+</script>
+
+</body>
+</html>

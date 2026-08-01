@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env
+.venv/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Mac
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Flask
+instance/
+
+# Uploads
+static/uploads/
+
+# Logs
+*.log
+
+ls -la
+
+
+
