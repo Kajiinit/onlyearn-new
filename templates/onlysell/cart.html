@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Cart - OnlyEarn{% endblock %}
+{% block content %}
+<section class="checkout-shell">
+    <div class="cart-main">
+        <div class="page-head compact">
+            <div>
+                <p class="eyebrow">OnlySell</p>
+                <h1>Shopping cart</h1>
+            </div>
+        </div>
+
+        {% for item in items %}
+            <article class="panel cart-item">
+                <a class="cart-thumb" href="{{ url_for('products.product_detail', product_id=item.product.id) }}">
+                    {% if item.product.image %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ item.product.image) }}" alt="{{ item.product.title }}">
+                    {% else %}
+                        <span>No image</span>
+                    {% endif %}
+                </a>
+                <div>
+                    <p class="tag">{{ item.product.category }}</p>
+                    <h2>{{ item.product.title }}</h2>
+                    <p class="muted">Sold by {{ item.product.seller_name }}</p>
+                    <p class="price">${{ "%.2f"|format(item.product.price|float) }}</p>
+                    <div class="cart-controls">
+                        <form method="post" action="{{ url_for('cart.update_cart', product_id=item.product.id) }}">
+                            <label>Qty
+                                <input type="number" name="quantity" min="0" value="{{ item.quantity }}">
+                            </label>
+                            <button type="submit">Update</button>
+                        </form>
+                        <form method="post" action="{{ url_for('cart.remove_from_cart', product_id=item.product.id) }}">
+                            <button type="submit">Remove</button>
+                        </form>
+                    </div>
+                </div>
+                <strong>${{ "%.2f"|format(item.subtotal|float) }}</strong>
+            </article>
+        {% else %}
+            <div class="empty-state">
+                <h2>Your cart is empty</h2>
+                <p>Browse OnlySell and add products to start checkout.</p>
+                <a class="button primary" href="{{ url_for('products.products') }}">Shop products</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <aside class="panel order-summary">
+        <h2>Order summary</h2>
+        <div class="summary-row">
+            <span>Items</span>
+            <strong>{{ cart_count }}</strong>
+        </div>
+        <div class="summary-row">
+            <span>Subtotal</span>
+            <strong>${{ "%.2f"|format(total) }}</strong>
+        </div>
+        <div class="summary-row">
+            <span>Delivery</span>
+            <strong>Free</strong>
+        </div>
+        <div class="summary-total">
+            <span>Total</span>
+            <strong>${{ "%.2f"|format(total) }}</strong>
+        </div>
+        {% if items %}
+             <a class="button primary full" href="{{ url_for('checkout.checkout') }}">Proceed to checkout</a>
+        {% endif %}
+    </aside>
+</section>
+{% endblock %}

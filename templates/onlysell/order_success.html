@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Order Complete - OnlyEarn{% endblock %}
+{% block content %}
+<section class="checkout-shell">
+    <article class="panel checkout-step">
+        <p class="eyebrow">Order placed</p>
+        <h1>Order #{{ order.id }}</h1>
+        <p>Your order has been created and saved.</p>
+        <div class="summary-row">
+            <span>Payment method</span>
+            <strong>{{ order.payment_method }}</strong>
+        </div>
+        <div class="summary-row">
+            <span>Payment status</span>
+            <strong>{{ order.payment_status }}</strong>
+        </div>
+        <div class="summary-row">
+            <span>Order status</span>
+            <strong>{{ order.order_status }}</strong>
+        </div>
+        <a class="button primary" href="{{ url_for('products.products') }}">Continue shopping</a>
+    </article>
+
+    <aside class="panel order-summary">
+        <h2>Total</h2>
+        {% for item in items %}
+            <div class="summary-item">
+                <span>{{ item.title }} × {{ item.quantity }}</span>
+                <strong>${{ "%.2f"|format(item.price * item.quantity) }}</strong>
+            </div>
+        {% endfor %}
+        <div class="summary-total">
+            <span>Paid total</span>
+            <strong>${{ "%.2f"|format(order.total) }}</strong>
+        </div>
+    </aside>
+</section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Verify Email - OnlyEarn{% endblock %}
+{% block content %}
+<section class="form-page">
+    <form class="panel form-panel otp-panel" method="post">
+        <h1>Verify your email</h1>
+        <p class="muted">Enter the 6-digit code sent to {{ user.email }}.</p>
+        <label>Verification code
+            <input class="otp-input" type="text" name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required>
+        </label>
+        <button class="button primary" type="submit">Verify email</button>
+        <div class="otp-actions">
+            <button form="resend-otp" type="submit">Resend code</button>
+            <a class="button ghost" href="{{ url_for('auth.login') }}">Back to login</a>
+        </div>
+    </form>
+    <form id="resend-otp" method="post" action="{{ url_for('resend_verification') }}"></form>
+</section>
+{% endblock %}

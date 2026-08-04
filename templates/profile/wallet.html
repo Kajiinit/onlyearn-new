@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Wallet - OnlyEarn{% endblock %}
+{% block content %}
+<section class="page-head">
+    <div>
+        <p class="eyebrow">Wallet</p>
+        <h1>Earnings overview</h1>
+    </div>
+</section>
+
+<section class="stats-grid">
+    <article class="stat-card">
+        <span>${{ "%.2f"|format(wallet.balance if wallet else 0) }}</span>
+        <p>Available balance</p>
+    </article>
+    <article class="stat-card">
+        <span>${{ "%.2f"|format(wallet.pending if wallet else 0) }}</span>
+        <p>Pending funds</p>
+    </article>
+    <article class="stat-card">
+        <span>${{ "%.2f"|format(wallet.lifetime_earnings if wallet else 0) }}</span>
+        <p>Lifetime earnings</p>
+    </article>
+</section>
+
+<section class="panel">
+    <h2>Wallet structure</h2>
+    <p class="muted">This page is ready for future deposits, withdrawals, escrow, and transaction history.</p>
+</section>
+{% endblock %}

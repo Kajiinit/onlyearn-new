@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}OnlyEarn · Work, Sell, Grow{% endblock %}
+{% block content %}
+<section class="home-experience">
+    <div class="home-orbit home-orbit-a" aria-hidden="true">⌘</div>
+    <div class="home-orbit home-orbit-b" aria-hidden="true">✦</div>
+    <div class="home-float home-book" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="home-float home-laptop" aria-hidden="true"><i></i></div>
+    <div class="home-float home-phone" aria-hidden="true"><i></i></div>
+
+    <section class="home-hero">
+        <div class="home-hero-copy">
+            <p class="home-kicker"><span></span> FREELANCE • MARKETPLACE • PAYMENTS • COMMUNITY</p>
+            <h1>Welcome to<br><em>OnlyEarn.</em></h1>
+            <p class="home-lead">Find freelance jobs, hire talented professionals, buy and sell products, chat securely, manage your wallet, and grow your income — all from one modern platform.</p>
+            <div class="home-actions">
+                <a class="button primary" href="{{ url_for('auth.register') }}">Join Free <b>→</b></a>
+                <a class="home-text-link" href="{{ url_for('jobs.jobs') }}">Browse Jobs <span>→</span></a>
+                <a class="home-text-link" href="#">Browse Marketplace <span>→</span></a>
+            </div>
+        </div>
+        <div class="home-hero-note"><span>01</span><p>Work. Sell. Hire.<br>Grow.</p></div>
+    </section>
+
+    <section class="home-modules" id="home-modules" aria-labelledby="modules-heading">
+        <div class="home-section-intro"><p class="home-kicker"><span></span> EXPLORE ONLYEARN</p><h2 id="modules-heading">Everything you need<br>to earn online.</h2></div>
+        <div class="home-module-grid">
+            <a class="home-module-card jobs-card" href="{{ url_for('jobs.jobs') }}" data-page-turn>
+                <span class="module-index">01 / WORK</span><span class="module-icon">✦</span><h3>OnlyWork</h3><p>Find freelance jobs or hire skilled experts with an easy application and hiring process.</p><span class="module-go">Explore jobs <b>→</b></span>
+            </a>
+            <a class="home-module-card sell-card" href="{{ url_for('products.products') }}" data-page-turn>
+                <span class="module-index">02 / MARKET</span><span class="module-icon">◎</span><h3>OnlySell</h3><p>Buy and sell products with secure listings, images, categories, and trusted sellers.</p><span class="module-go">Visit marketplace <b>→</b></span>
+            </a>
+            <a class="home-module-card advice-card" href="{{ url_for('pages.only_advice') }}" data-page-turn>
+                <span class="module-index">03 / ADVICE</span><span class="module-icon">✳</span><h3>OnlyAdvice</h3><p>Connect with specialists for advice on legal, real estate, health, business, creative work, and more.</p><span class="module-go">Find an expert <b>→</b></span>
+            </a>
+            <a class="home-module-card wallet-card" href="#" data-page-turn>
+                <span class="module-index">04 / MONEY</span><span class="module-icon">◒</span><h3>OnlyWallet</h3><p>Manage payments, earnings, orders, and future escrow transactions from one place.</p><span class="module-go">View wallet <b>→</b></span>
+            </a>
+            <a class="home-module-card dash-card" href="#" data-page-turn>
+                <span class="module-index">05 / OVERVIEW</span><span class="module-icon">↗</span><h3>Dashboard</h3><p>Track jobs, products, applications, wallet balance, and account activity.</p><span class="module-go">Open dashboard <b>→</b></span>
+            </a>
+        </div>
+    </section>
+
+    <section class="home-statement"><p>WHY CHOOSE ONLYEARN</p><h2>Everything you need<br><em>to earn online.</em></h2><span>Whether you're a freelancer, entrepreneur, buyer, or business, OnlyEarn brings everything together in one secure platform.</span></section>
+</section>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3>Get to Know Us</h3>
+            <a href="{{ url_for('pages.about') }}">About OnlyEarn</a>
+            <a href="{{ url_for('pages.careers') }}">Careers</a>
+            <a href="{{ url_for('pages.contact') }}">Contact Us</a>
+        </div>
+        <div class="footer-column">
+            <h3>Support</h3>
+            <a href="{{ url_for('pages.help') }}">Help Center</a>
+            <a href="{{ url_for('pages.faq') }}">FAQ</a>
+        </div>
+        <div class="footer-column">
+            <h3>Legal</h3>
+            <a href="{{ url_for('pages.privacy') }}">Privacy Policy</a>
+            <a href="{{ url_for('pages.terms') }}">Terms &amp; Conditions</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <h2>OnlyEarn</h2>
+        <p>Work. Sell. Hire. Grow.</p>
+        <p>Empowering freelancers, businesses and entrepreneurs through one connected marketplace.</p>
+        <p style="margin-top:20px;">© 2026 OnlyEarn. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<div class="page-turn-loader" aria-hidden="true"><span class="page-turn-sheet"></span><span class="page-turn-hand">☝</span><span class="page-turn-copy">Opening your next chapter</span></div>
+
+<script>
+    document.querySelectorAll('[data-page-turn]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (link.classList.contains('is-flipping')) return;
+            link.classList.add('is-flipping');
+            const loader = document.querySelector('.page-turn-loader');
+            window.setTimeout(() => { loader.classList.add('is-turning'); }, 320);
+            window.setTimeout(() => { window.location.href = link.href; }, 1080);
+        });
+    });
+</script>
+{% endblock %}

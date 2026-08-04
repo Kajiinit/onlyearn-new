@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ product.title }} - OnlyEarn{% endblock %}
+{% block content %}
+<section class="detail-layout">
+    <div class="detail-image panel">
+        {% if product.image %}
+            <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="{{ product.title }}">
+        {% else %}
+            <span>No image uploaded</span>
+        {% endif %}
+    </div>
+    <article class="panel detail-copy">
+        <p class="tag">{{ product.category }}</p>
+        <h1>{{ product.title }}</h1>
+        <p class="price large">${{ product.price }}</p>
+        <p>{{ product.description }}</p>
+        <form class="buy-box" method="post" action="{{ url_for('add_to_cart', product_id=product.id) }}">
+            <label>Quantity
+                <input type="number" name="quantity" value="1" min="1">
+            </label>
+            <button class="button primary" type="submit">Add to cart</button>
+            <a class="button ghost" href="{{ url_for('cart.cart') }}">View cart</a>
+        </form>
+        <hr>
+        <h2>Seller info</h2>
+        <p>{{ product.seller_name }}</p>
+        <p class="muted">{{ product.seller_email }}</p>
+        {% if product.allow_negotiation %}
+            <p class="status">Negotiation available</p>
+        {% else %}
+            <p class="muted">Seller is not accepting negotiation messages for this product.</p>
+        {% endif %}
+        {% if product.allow_negotiation and current_user and current_user.id != product.seller %}
+           
+        <a class="button primary" href="{{ url_for('messages.messages') }}">Message seller</a>
+            
+        {% endif %}
+    </article>
+</section>
+{% endblock %}

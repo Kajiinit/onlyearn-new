@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - OnlyEarn{% endblock %}
+{% block content %}
+<section class="page-head">
+    <div>
+        <p class="eyebrow">Dashboard</p>
+        <h1>Welcome, {{ current_user.name }}</h1>
+    </div>
+    <div class="actions">
+        <a class="button primary" href="{{ url_for('jobs.create_job') }}">Post job</a>
+        <a class="button ghost" href="{{ url_for('products.create_product') }}">Sell product</a>
+    </div>
+</section>
+
+<section class="stats-grid">
+    <article class="stat-card">
+        <span>{{ stats.jobs }}</span>
+        <p>Jobs posted</p>
+    </article>
+    <article class="stat-card">
+        <span>{{ stats.applications }}</span>
+        <p>Applications sent</p>
+    </article>
+    <article class="stat-card">
+        <span>{{ stats.products }}</span>
+        <p>Products listed</p>
+    </article>
+    <article class="stat-card">
+        <span>${{ "%.2f"|format(wallet.lifetime_earnings if wallet else 0) }}</span>
+        <p>Earnings placeholder</p>
+    </article>
+</section>
+
+<section class="module-grid">
+    <a class="module" href="{{ url_for('jobs.jobs') }}">
+        <h2>OnlyJobs</h2>
+        <p>Browse work, apply, or manage your applicant list.</p>
+    </a>
+    <a class="module" href="{{ url_for('products.products') }}">
+        <h2>OnlySell</h2>
+        <p>Shop listings and publish your own products.</p>
+    </a>
+<!--
+    <a class="module" href="{{ url_for('profile.profile') }}">
+    <h2>My Profile</h2>
+    <p>Update your profile, skills, experience, and personal details.</p>
+    </a>
+    -->
+    <a class="module" href="{{ url_for('messages.messages') }}">
+        <h2>Messages</h2>
+        <p>Contact employers, sellers, and buyers.</p>
+    </a>
+    
+    <a class="module" href="{{ url_for('wallet.wallet') }}">
+        <h2>Wallet</h2>
+        <p>Review balance, pending funds, and earning totals.</p>
+    </a>
+
+</section>
+{% endblock %}

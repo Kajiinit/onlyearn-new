@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}OnlyEarn{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="{{ url_for('static', filename='js/theme.js') }}" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <a class="brand" href="{{ url_for('pages.home') }}">OnlyEarn</a>
+
+        <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-menu-toggle>☰</button>
+<div class="nav-links" data-menu>
+
+    <a href="{{ url_for('jobs.jobs') }}">OnlyWork</a>
+
+    <a href="{{ url_for('products.products') }}">OnlySell</a>
+
+    <a href="{{ url_for('pages.only_advice') }}">OnlyAdvice</a>
+
+    <a href="{{ url_for('cart.cart') }}">
+        Cart{% if cart_count %} ({{ cart_count }}){% endif %}
+    </a>
+
+
+    {% if current_user %}
+
+        <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+
+        <a href="{{ url_for('messages.messages') }}">Messages</a>
+<!--
+        <a href="{{ url_for('profile.profile') }}">Profile</a>
+-->
+       <a href="{{ url_for('wallet.wallet') }}">Wallet</a>
+
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+
+    {% else %}
+
+        <a href="{{ url_for('auth.login') }}">Login</a>
+
+        <a class="nav-cta" href="{{ url_for('auth.register') }}">
+            Register
+        </a>
+
+    {% endif %}
+
+</div>
+            <button class="theme-toggle" type="button" aria-label="Toggle dark mode" data-theme-toggle>◐</button>
+        </div>
+    </nav>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-wrap">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

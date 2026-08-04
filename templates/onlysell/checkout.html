@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Checkout - OnlyEarn{% endblock %}
+{% block content %}
+<section class="checkout-shell">
+    <div class="checkout-main">
+        <section class="panel checkout-step">
+            <p class="eyebrow">Step 1</p>
+            <h1>Delivery details</h1>
+            <p class="muted">Enter where the order should be delivered. These details are attached to whichever payment option you choose.</p>
+        </section>
+
+        <section class="panel checkout-step">
+            <p class="eyebrow">Step 2</p>
+            <h2>Pay by card with Stripe</h2>
+            {% if stripe_ready %}
+                <form class="checkout-form" method="post" action="{{ url_for('stripe_checkout') }}">
+                    <div class="two-col">
+                        <label>Full name
+                            <input type="text" name="full_name" value="{{ current_user.name }}" required>
+                        </label>
+                        <label>Phone
+                            <input type="tel" name="phone" required>
+                        </label>
+                    </div>
+                    <label>Address
+                        <input type="text" name="address" required>
+                    </label>
+                    <label>City
+                        <input type="text" name="city" required>
+                    </label>
+                    <button class="button primary" type="submit">Pay with card</button>
+                </form>
+            {% else %}
+                <div class="setup-note">
+                    <strong>Stripe setup needed</strong>
+                    <p>Add <code>STRIPE_SECRET_KEY</code> to your environment and install the <code>stripe</code> package. The button will activate automatically.</p>
+                </div>
+            {% endif %}
+        </section>
+
+        <section class="panel checkout-step">
+            <p class="eyebrow">Step 3</p>
+            <h2>Pay with crypto</h2>
+            <form class="checkout-form" method="post" action="{{ url_for('crypto_checkout') }}">
+                <div class="two-col">
+                    <label>Full name
+                        <input type="text" name="full_name" value="{{ current_user.name }}" required>
+                    </label>
+                    <label>Phone
+                        <input type="tel" name="phone" required>
+                    </label>
+                </div>
+                <label>Address
+                    <input type="text" name="address" required>
+                </label>
+                <div class="two-col">
+                    <label>City
+                        <input type="text" name="city" required>
+                    </label>
+                    <label>Crypto
+                        <select name="crypto_currency">
+                            {% for currency, address in crypto_options.items() %}
+                                <option value="{{ currency }}">{{ currency }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+                <button class="button primary" type="submit">Place crypto order</button>
+            </form>
+        </section>
+    </div>
+
+    <aside class="panel order-summary">
+        <h2>Order summary</h2>
+        {% for item in items %}
+            <div class="summary-item">
+                <span>{{ item.product.title }} × {{ item.quantity }}</span>
+                <strong>${{ "%.2f"|format(item.subtotal) }}</strong>
+            </div>
+        {% endfor %}
+        <div class="summary-row">
+            <span>Delivery</span>
+            <strong>Free</strong>
+        </div>
+        <div class="summary-total">
+            <span>Total</span>
+            <strong>${{ "%.2f"|format(total) }}</strong>
+        </div>
+    </aside>
+</section>
+{% endblock %}

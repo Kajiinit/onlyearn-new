@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Crypto Payment - OnlyEarn{% endblock %}
+{% block content %}
+<section class="checkout-shell">
+    <article class="panel checkout-step">
+        <p class="eyebrow">Crypto payment</p>
+        <h1>Order #{{ order.id }}</h1>
+        <p>Send exactly <strong>${{ "%.2f"|format(order.total) }}</strong> worth of {{ order.crypto_currency }} to the wallet below.</p>
+        <div class="wallet-address">{{ order.crypto_address }}</div>
+        <p class="muted">Payment status: {{ order.payment_status }}. In a live gateway, webhook confirmation would update this automatically after network confirmation.</p>
+        <a class="button primary" href="{{ url_for('order_success', order_id=order.id) }}">View order</a>
+    </article>
+
+    <aside class="panel order-summary">
+        <h2>Items</h2>
+        {% for item in items %}
+            <div class="summary-item">
+                <span>{{ item.title }} × {{ item.quantity }}</span>
+                <strong>${{ "%.2f"|format(item.price * item.quantity) }}</strong>
+            </div>
+        {% endfor %}
+    </aside>
+</section>
+{% endblock %}

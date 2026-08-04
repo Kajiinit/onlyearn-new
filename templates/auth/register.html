@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Register - OnlyEarn{% endblock %}
+{% block content %}
+<section class="form-page">
+    <form class="panel form-panel" method="post">
+        <h1>Create account</h1>
+        <label>Name
+            <input type="text" name="name" required autocomplete="name">
+        </label>
+        <label>Email
+            <input type="email" name="email" required autocomplete="email">
+        </label>
+        <label>Password
+            <input type="password" name="password" required autocomplete="new-password">
+        </label>
+        <button class="button primary" type="submit">Register</button>
+        <div class="auth-divider"><span>or sign up with</span></div>
+        <div class="social-login-options">
+            <a class="social-login-button google" href="#"><span>G</span> Continue with Google</a>
+            <a class="social-login-button apple" href="#"><span>●</span> Continue with Apple</a>
+        </div>
+        <p class="muted">We will send a 6-digit verification code to your email.</p>
+        <p class="muted">Already registered? <a href="{{ url_for('auth.login') }}">Login</a></p>
+    </form>
+</section>
+{% endblock %}

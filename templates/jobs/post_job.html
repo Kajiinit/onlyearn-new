@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Create Job - OnlyEarn{% endblock %}
+{% block content %}
+<section class="form-page">
+    <form class="panel form-panel wide" method="post">
+        <h1>Create job</h1>
+        <label>Title
+            <input type="text" name="title" required>
+        </label>
+        <label>Description
+            <textarea name="description" rows="6" required></textarea>
+        </label>
+        <label>Budget
+            <input type="text" name="budget" required placeholder="500">
+        </label>
+        <button class="button primary" type="submit">Publish job</button>
+    </form>
+</section>
+{% endblock %}

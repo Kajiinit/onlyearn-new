@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Messages - OnlyEarn{% endblock %}
+{% block content %}
+<section class="page-head">
+    <div>
+        <p class="eyebrow">Messages</p>
+        <h1>Inbox</h1>
+    </div>
+</section>
+
+<section class="split-layout">
+    <form class="panel form-panel" method="post">
+        <h2>New message</h2>
+        <label>Receiver
+            <select name="receiver_id" required>
+                <option value="">Select user</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.name }} - {{ user.email }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Message
+            <textarea name="body" rows="5" required></textarea>
+        </label>
+        <button class="button primary" type="submit">Send</button>
+    </form>
+
+    <div class="message-list">
+        {% for message in messages %}
+            <article class="panel message-card">
+                <p class="muted">{{ message.created_at }}</p>
+                <h2>{{ message.sender_name }} → {{ message.receiver_name }}</h2>
+                <p>{{ message.body }}</p>
+            </article>
+        {% else %}
+            <div class="empty-state">
+                <h2>No messages yet</h2>
+                <p>Your conversations will appear here.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

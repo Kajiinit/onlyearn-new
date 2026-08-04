@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}OnlyAdvice · Expert guidance on OnlyEarn{% endblock %}
+{% block content %}
+<section class="advice-page">
+    <header class="advice-hero">
+        <p class="panel-label">ONLYADVICE</p>
+        <h1>Talk to the right expert, when it matters.</h1>
+        <p>
+            OnlyAdvice connects people with experienced professionals for practical advice, counsel, second opinions, and business ideas.
+        </p>
+        <a class="button primary" href="{{ url_for('auth.register') }}">
+            Join OnlyAdvice
+        </a>
+    </header>
+
+    <section class="advice-specialties">
+        <article>
+            <span>⚖</span>
+            <h2>Legal</h2>
+            <p>Connect with legal professionals for general guidance and next steps.</p>
+        </article>
+
+        <article>
+            <span>⌂</span>
+            <h2>Real estate</h2>
+            <p>Get help evaluating property decisions, markets, and opportunities.</p>
+        </article>
+
+        <article>
+            <span>✚</span>
+            <h2>Health</h2>
+            <p>Find qualified professionals for general wellness guidance and second opinions.</p>
+        </article>
+
+        <article>
+            <span>✦</span>
+            <h2>Business & creative</h2>
+            <p>Learn from founders, consultants, actors, and creative specialists.</p>
+        </article>
+    </section>
+
+    <section class="advice-how">
+        <p class="panel-label">HOW IT WILL WORK</p>
+        <h2>Expertise with clear rates.</h2>
+        <p>
+            Experts will create profiles, set their own consultation rate, list availability, and connect with people by message or booked session. This is the foundation for your Minnect-style expert network inside OnlyEarn.
+        </p>
+    </section>
+</section>
+{% endblock %}

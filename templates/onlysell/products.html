@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}OnlySell - OnlyEarn{% endblock %}
+{% block content %}
+<section class="page-head">
+    <div>
+        <p class="eyebrow">OnlySell</p>
+        <h1>Product marketplace</h1>
+    </div>
+    {% if current_user %}
+        <a class="button primary" href="{{ url_for('products.create_product') }}">Create listing</a>
+    {% endif %}
+</section>
+
+<section class="product-grid">
+    {% for product in products %}
+        <article class="product-card">
+            <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
+                <div class="product-image">
+                    {% if product.image %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="{{ product.title }}">
+                    {% else %}
+                        <span>No image</span>
+                    {% endif %}
+                </div>
+                <div class="product-body">
+                    <p class="tag">{{ product.category }}</p>
+                    <h2>{{ product.title }}</h2>
+                    <p class="price">${{ product.price }}</p>
+                    <p class="muted">Seller: {{ product.seller_name }}</p>
+                    {% if product.allow_negotiation %}
+                        <p class="status">Negotiable</p>
+                    {% endif %}
+                </div>
+            </a>
+            <form class="product-actions" method="post" action="{{ url_for('cart.add_to_cart', product_id=product.id) }}">
+                <input type="hidden" name="quantity" value="1">
+                <button class="button primary" type="submit">Add to cart</button>
+            </form>
+        </article>
+    {% else %}
+        <div class="empty-state">
+            <h2>No products yet</h2>
+            <p>Create the first OnlySell listing.</p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}

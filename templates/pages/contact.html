@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - OnlyEarn{% endblock %}
+
+{% block content %}
+<section class="contact-page" aria-labelledby="contact-title">
+    <div class="contact-aurora contact-aurora-one" aria-hidden="true"></div>
+    <div class="contact-aurora contact-aurora-two" aria-hidden="true"></div>
+
+    <header class="contact-intro">
+        <p class="contact-eyebrow">ONLYEARN / PEOPLE</p>
+        <h1 id="contact-title">Let’s make a <span>connection.</span></h1>
+        <p>Meet the people behind OnlyEarn. Select a profile image to turn the card over and reveal their contact details.</p>
+    </header>
+
+    <div class="contact-team-grid">
+
+        <!-- Founder -->
+        <article class="contact-profile">
+            <button class="contact-flip-card" type="button" aria-label="Show contact details for Manoj Thapa" aria-pressed="false">
+                <span class="contact-card-inner">
+                    <span class="contact-card-face contact-card-front">
+                        <img src="{{ url_for('static', filename='profile/team/founder.jpg') }}" alt="Founder">
+                        <span class="contact-image-scan" aria-hidden="true"></span>
+                        <span class="contact-flip-hint">Click to reveal <b>↗</b></span>
+                    </span>
+
+                    <span class="contact-card-face contact-card-back">
+                        <span class="contact-back-kicker">FOUNDER & CEO</span>
+                        <strong>Manoj<br>Thapa</strong>
+                        <span class="contact-divider" aria-hidden="true"></span>
+                        <a href="mailto:Iamkedarjung@gmail.com">Iamkedarjung@gmail.com</a>
+                        <a href="https://instagram.com/kthapa998" target="_blank" rel="noopener noreferrer">
+                     <i class="fa-brands fa-instagram"></i>
+                     kthapa998
+</a>
+
+</a>
+<a href="tel:+971589115635">+971 58 911 5635</a>
+                        <span class="contact-flip-hint">Click to return <b>↩</b></span>
+                    </span>
+                </span>
+            </button>
+
+            <div class="contact-profile-caption">
+                <h2>Manoj Thapa</h2>
+                <p>Founder & CEO </p>
+            </div>
+        </article>
+
+
+        <!-- Jhonny Jarjour -->
+        <article class="contact-profile">
+            <button class="contact-flip-card" type="button" aria-label="Show contact details for Jhonny Jarjour" aria-pressed="false">
+                <span class="contact-card-inner">
+                    <span class="contact-card-face contact-card-front">
+                        <img src="{{ url_for('static', filename='profile/team/jhonny.jpg') }}" alt="Jhonny Jarjour">
+                        <span class="contact-image-scan" aria-hidden="true"></span>
+                        <span class="contact-flip-hint">Click to reveal <b>↗</b></span>
+                    </span>
+
+                    <span class="contact-card-face contact-card-back">
+                        <span class="contact-back-kicker">HEAD OF SALES & MARKETING</span>
+                        <strong>Jhonny<br>Jarjour</strong>
+                        <span class="contact-divider" aria-hidden="true"></span>
+                        <a href="mailto:cieldxb@gmail.com">cieldxb@gmail.com</a>
+                         <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">
+                     <i class="fa-brands fa-instagram"></i>
+                     cieldxb
+                        <a href="tel:+971505070355">+971 50 507 0355</a>
+                        <span class="contact-flip-hint">Click to return <b>↩</b></span>
+                    </span>
+                </span>
+            </button>
+
+            <div class="contact-profile-caption">
+                <h2>Jhonny Jarjour</h2>
+                <p>Head Of Sales & Marketing</p>
+            </div>
+        </article>
+
+
+        <!-- Sambridhi -->
+        <article class="contact-profile">
+            <button class="contact-flip-card" type="button" aria-label="Show contact details for Sambridhi Pokharel" aria-pressed="false">
+                <span class="contact-card-inner">
+                    <span class="contact-card-face contact-card-front">
+                        <img src="{{ url_for('static', filename='profile/team/sambridhi.jpg') }}" alt="Sambridhi Pokharel">
+                        <span class="contact-image-scan" aria-hidden="true"></span>
+                        <span class="contact-flip-hint">Click to reveal <b>↗</b></span>
+                    </span>
+
+                    <span class="contact-card-face contact-card-back">
+                        <span class="contact-back-kicker">OPERATIONS / APAC</span>
+                        <strong>Sambridhi<br>Pokharel</strong>
+                        <span class="contact-divider" aria-hidden="true"></span>
+                        <a href="mailto:sambridhip5@gmail.com">sambridhip5@gmail.com</a>
+                         <a href="https://instagram.com/_sambridhi77" target="_blank" rel="noopener noreferrer">
+                     <i class="fa-brands fa-instagram"></i>
+                     _sambridhi77
+                        <a href="tel:+9779824390543">+977 982-4390543</a>
+                        <span class="contact-flip-hint">Click to return <b>↩</b></span>
+                    </span>
+                </span>
+            </button>
+
+            <div class="contact-profile-caption">
+                <h2>Sambridhi Pokharel</h2>
+                <p> Co-Founder & Head of Operations, Asia-Pacific</p>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll('.contact-flip-card').forEach((card) => {
+        card.addEventListener('click', () => {
+            const isFlipped = card.classList.toggle('is-flipped');
+            card.setAttribute('aria-pressed', String(isFlipped));
+        });
+    });
+</script>
+{% endblock %}

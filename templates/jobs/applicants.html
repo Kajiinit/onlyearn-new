@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Applicants - OnlyEarn{% endblock %}
+{% block content %}
+<section class="page-head">
+    <div>
+        <p class="eyebrow">Applicants</p>
+        <h1>{{ job.title }}</h1>
+    </div>
+    <a class="button ghost" href="{{ url_for('jobs.jobs') }}">Back to jobs</a>
+</section>
+
+<section class="table-panel panel">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for applicant in applicants %}
+                <tr>
+                    <td>{{ applicant.name }}</td>
+                    <td>{{ applicant.email }}</td>
+                    <td><span class="status">{{ applicant.status }}</span></td>
+                    <td class="table-actions">
+                        <form method="post" action="{{ url_for('update_application_status', application_id=applicant.id, status='Shortlisted') }}">
+                            <button type="submit">Shortlist</button>
+                        </form>
+                        <form method="post" action="{{ url_for('update_application_status', application_id=applicant.id, status='Hired') }}">
+                            <button type="submit">Hire</button>
+                        </form>
+                        <form method="post" action="{{ url_for('update_application_status', application_id=applicant.id, status='Rejected') }}">
+                            <button type="submit">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No applications yet.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

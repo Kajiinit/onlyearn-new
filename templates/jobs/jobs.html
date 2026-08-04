@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}OnlyJobs - OnlyEarn{% endblock %}
+{% block content %}
+<section class="page-head">
+    <div>
+        <p class="eyebrow">OnlyJobs</p>
+        <h1>Freelance job marketplace</h1>
+    </div>
+    {% if current_user %}
+        <a class="button primary" href="{{ url_for('jobs.create_job') }}">Create job</a>
+    {% endif %}
+</section>
+
+<section class="list-grid">
+    {% for job in jobs %}
+        <article class="panel listing">
+            <div>
+                <p class="tag">${{ job.budget }}</p>
+                <h2>{{ job.title }}</h2>
+                <p>{{ job.description }}</p>
+                <p class="muted">Employer: {{ job.employer_name }}</p>
+            </div>
+            <div class="actions">
+                {% if current_user and current_user.id == job.created_by %}
+                    <a class="button ghost" href="{{ url_for('jobs.applicants', job_id=job.id) }}">Applicants</a>
+                {% elif current_user %}
+                    <form method="post" action="{{ url_for('apply_to_job', job_id=job.id) }}">
+                        <button class="button primary" type="submit">Apply</button>
+                    </form>
+                {% else %}
+                    <a class="button primary" href="{{ url_for('auth.login') }}">Login to apply</a>
+                {% endif %}
+            </div>
+        </article>
+    {% else %}
+        <div class="empty-state">
+            <h2>No jobs yet</h2>
+            <p>Be the first employer to publish an opportunity.</p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}
