@@ -26,7 +26,6 @@ def get_db():
     return g.db
 
 
-
 # ---------------------------------------
 # Close database
 # ---------------------------------------
@@ -41,7 +40,6 @@ def close_db(error=None):
     if db is not None:
 
         db.close()
-
 
 
 # ---------------------------------------
@@ -86,7 +84,9 @@ def init_db():
     """)
 
 
-    # refresh columns after every change
+    # ---------------------------------------
+    # Add missing user columns
+    # ---------------------------------------
 
     def add_column_if_missing(
         table,
@@ -103,7 +103,6 @@ def init_db():
             ).fetchall()
 
         ]
-
 
         if column not in columns:
 
@@ -156,6 +155,7 @@ def init_db():
         "bio",
         "TEXT"
     )
+
 
     add_column_if_missing(
         "users",
@@ -227,7 +227,6 @@ def init_db():
     )
 
 
-
     # -------------------------------
     # EDUCATION
     # -------------------------------
@@ -250,7 +249,6 @@ def init_db():
 
         )
     """)
-
 
 
     # -------------------------------
@@ -283,7 +281,6 @@ def init_db():
     """)
 
 
-
     # -------------------------------
     # SKILLS
     # -------------------------------
@@ -297,7 +294,7 @@ def init_db():
 
             name TEXT NOT NULL,
 
-            UNIQUE(user_id,name),
+            UNIQUE(user_id, name),
 
             FOREIGN KEY(user_id)
             REFERENCES users(id)
@@ -305,7 +302,9 @@ def init_db():
 
         )
     """)
-        # -------------------------------
+
+
+    # -------------------------------
     # PORTFOLIO
     # -------------------------------
 
@@ -332,7 +331,6 @@ def init_db():
     """)
 
 
-
     # -------------------------------
     # VERIFICATION REQUESTS
     # -------------------------------
@@ -356,12 +354,49 @@ def init_db():
     """)
 
 
+    # ---------------------------------------
+    # ONLYADVICE ADVISORS
+    # ---------------------------------------
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS advisors (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            user_id INTEGER NOT NULL UNIQUE,
+
+            category TEXT NOT NULL,
+
+            department TEXT NOT NULL,
+
+            expertise TEXT NOT NULL,
+
+            bio TEXT NOT NULL,
+
+            rate_per_minute TEXT NOT NULL,
+
+            availability TEXT,
+
+            rating REAL DEFAULT 0,
+
+            total_reviews INTEGER DEFAULT 0,
+
+            is_verified INTEGER DEFAULT 0,
+
+            created_at TEXT,
+
+            updated_at TEXT,
+
+            FOREIGN KEY(user_id)
+            REFERENCES users(id)
+
+        )
+    """)
+
 
     db.commit()
 
     db.close()
-
-
 
 
 # ---------------------------------------
@@ -379,7 +414,6 @@ def init_db_continue():
     )
 
     cursor = db.cursor()
-
 
 
     # -------------------------------
@@ -404,7 +438,6 @@ def init_db_continue():
 
         )
     """)
-
 
 
     # -------------------------------
@@ -432,7 +465,6 @@ def init_db_continue():
 
         )
     """)
-
 
 
     # -------------------------------
@@ -464,7 +496,8 @@ def init_db_continue():
         )
     """)
 
-        # -------------------------------
+
+    # -------------------------------
     # MESSAGES
     # -------------------------------
 
@@ -491,7 +524,6 @@ def init_db_continue():
     """)
 
 
-
     # -------------------------------
     # WALLETS
     # -------------------------------
@@ -514,7 +546,6 @@ def init_db_continue():
 
         )
     """)
-
 
 
     # -------------------------------
@@ -559,7 +590,6 @@ def init_db_continue():
     """)
 
 
-
     # -------------------------------
     # ORDER ITEMS
     # -------------------------------
@@ -592,7 +622,6 @@ def init_db_continue():
 
         )
     """)
-
 
 
     db.commit()

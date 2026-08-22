@@ -1,60 +1,551 @@
 {% extends "base.html" %}
-{% block title %}Dashboard - OnlyEarn{% endblock %}
+
+{% block title %}Dashboard · OnlyEarn{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/dashboard.css') }}">
+{% endblock %}
+
 {% block content %}
-<section class="page-head">
-    <div>
-        <p class="eyebrow">Dashboard</p>
-        <h1>Welcome, {{ current_user.name }}</h1>
-    </div>
-    <div class="actions">
-        <a class="button primary" href="{{ url_for('jobs.create_job') }}">Post job</a>
-        <a class="button ghost" href="{{ url_for('products.create_product') }}">Sell product</a>
-    </div>
-</section>
 
-<section class="stats-grid">
-    <article class="stat-card">
-        <span>{{ stats.jobs }}</span>
-        <p>Jobs posted</p>
-    </article>
-    <article class="stat-card">
-        <span>{{ stats.applications }}</span>
-        <p>Applications sent</p>
-    </article>
-    <article class="stat-card">
-        <span>{{ stats.products }}</span>
-        <p>Products listed</p>
-    </article>
-    <article class="stat-card">
-        <span>${{ "%.2f"|format(wallet.lifetime_earnings if wallet else 0) }}</span>
-        <p>Earnings placeholder</p>
-    </article>
-</section>
+<main class="dashboard">
 
-<section class="module-grid">
-    <a class="module" href="{{ url_for('jobs.jobs') }}">
-        <h2>OnlyJobs</h2>
-        <p>Browse work, apply, or manage your applicant list.</p>
-    </a>
-    <a class="module" href="{{ url_for('products.products') }}">
-        <h2>OnlySell</h2>
-        <p>Shop listings and publish your own products.</p>
-    </a>
-<!--
-    <a class="module" href="{{ url_for('profile.profile') }}">
-    <h2>My Profile</h2>
-    <p>Update your profile, skills, experience, and personal details.</p>
-    </a>
-    -->
-    <a class="module" href="{{ url_for('messages.messages') }}">
-        <h2>Messages</h2>
-        <p>Contact employers, sellers, and buyers.</p>
-    </a>
-    
-    <a class="module" href="{{ url_for('wallet.wallet') }}">
-        <h2>Wallet</h2>
-        <p>Review balance, pending funds, and earning totals.</p>
-    </a>
+    <!-- =====================================================
+         WELCOME
+         ===================================================== -->
 
-</section>
+    <section class="dashboard-welcome">
+
+        <div class="welcome-glow glow-one"></div>
+        <div class="welcome-glow glow-two"></div>
+
+        <div class="welcome-content">
+
+            <p class="dashboard-eyebrow">
+                ONLYEARN · DASHBOARD
+            </p>
+
+            <h1>
+                Welcome,
+                <span>{{ current_user.name }}</span>
+            </h1>
+
+            <p class="welcome-subtitle">
+                Your work, earnings and activity — all in one place.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN EXPERIENCE CARDS
+         ===================================================== -->
+
+    <section class="dashboard-experience">
+
+        <div class="section-heading">
+            <div>
+                <span class="dashboard-eyebrow">YOUR SPACE</span>
+                <h2>What are you up to?</h2>
+            </div>
+
+            <span class="swipe-hint">
+                Flick to explore →
+            </span>
+        </div>
+
+
+        <div class="experience-track">
+
+
+            <!-- ONLYJOBS -->
+
+            <a
+                href="{{ url_for('jobs.jobs') }}"
+                class="experience-card jobs-card"
+            >
+
+                <div class="experience-top">
+
+                    <span class="experience-icon">
+                        💼
+                    </span>
+
+                    <span class="experience-arrow">
+                        ↗
+                    </span>
+
+                </div>
+
+                <div class="experience-number">
+                    {{ stats.jobs }}
+                </div>
+
+                <h3>OnlyJobs</h3>
+
+                <p>
+                    Find work, apply and manage your opportunities.
+                </p>
+
+                <div class="experience-meta">
+                    <span>{{ stats.applications }} applications sent</span>
+                </div>
+
+            </a>
+
+
+            <!-- ONLYSELL -->
+
+            <a
+                href="{{ url_for('products.products') }}"
+                class="experience-card sell-card"
+            >
+
+                <div class="experience-top">
+
+                    <span class="experience-icon">
+                        🛒
+                    </span>
+
+                    <span class="experience-arrow">
+                        ↗
+                    </span>
+
+                </div>
+
+                <div class="experience-number">
+                    {{ stats.products }}
+                </div>
+
+                <h3>OnlySell</h3>
+
+                <p>
+                    Sell your products and turn your listings into income.
+                </p>
+
+                <div class="experience-meta">
+                    <span>Products listed</span>
+                </div>
+
+            </a>
+
+
+            <!-- MESSAGES -->
+
+            <a
+                href="{{ url_for('messages.messages') }}"
+                class="experience-card messages-card"
+            >
+
+                <div class="experience-top">
+
+                    <span class="experience-icon">
+                        💬
+                    </span>
+
+                    <span class="experience-arrow">
+                        ↗
+                    </span>
+
+                </div>
+
+                <div class="experience-number">
+                    •••
+                </div>
+
+                <h3>Messages</h3>
+
+                <p>
+                    Keep up with buyers, employers and your network.
+                </p>
+
+                <div class="experience-meta">
+                    <span>Open inbox</span>
+                </div>
+
+            </a>
+
+
+            <!-- EARNS -->
+
+            <a
+                href="{{ url_for('dashboard.dashboard') }}#earns"
+                class="experience-card earns-card"
+            >
+
+                <div class="experience-top">
+
+                    <span class="experience-icon">
+                        ₿
+                    </span>
+
+                    <span class="experience-arrow">
+                        ↗
+                    </span>
+
+                </div>
+
+                <div class="experience-number protected-dashboard-value">
+                    ••••••
+                </div>
+
+                <h3>Earns</h3>
+
+                <p>
+                    Track what you earned today, this week, this month or any date.
+                </p>
+
+                <div class="experience-meta">
+                    <span>Tap to view earnings</span>
+                </div>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         EARNINGS
+         ===================================================== -->
+
+    <section class="earnings-section" id="earns">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="dashboard-eyebrow">EARNINGS</span>
+                <h2>Your money, privately.</h2>
+            </div>
+
+            <span class="privacy-pill">
+                🔒 Hidden by default
+            </span>
+
+        </div>
+
+
+        <div class="earnings-orbit">
+
+
+            <!-- TODAY -->
+
+            <article class="earning-card">
+
+                <div class="earning-card-top">
+
+                    <span class="earning-icon">◷</span>
+
+                    <button
+                        type="button"
+                        class="earning-toggle"
+                        onclick="toggleAmount(this)"
+                    >
+                        👁
+                    </button>
+
+                </div>
+
+                <span class="earning-label">
+                    Today
+                </span>
+
+                <strong
+                    class="earning-value"
+                    data-value="${{ '%.2f'|format(earnings.day) }}"
+                >
+                    ••••••
+                </strong>
+
+            </article>
+
+
+            <!-- WEEK -->
+
+            <article class="earning-card">
+
+                <div class="earning-card-top">
+
+                    <span class="earning-icon">↗</span>
+
+                    <button
+                        type="button"
+                        class="earning-toggle"
+                        onclick="toggleAmount(this)"
+                    >
+                        👁
+                    </button>
+
+                </div>
+
+                <span class="earning-label">
+                    This week
+                </span>
+
+                <strong
+                    class="earning-value"
+                    data-value="${{ '%.2f'|format(earnings.week) }}"
+                >
+                    ••••••
+                </strong>
+
+            </article>
+
+
+            <!-- MONTH -->
+
+            <article class="earning-card">
+
+                <div class="earning-card-top">
+
+                    <span class="earning-icon">◉</span>
+
+                    <button
+                        type="button"
+                        class="earning-toggle"
+                        onclick="toggleAmount(this)"
+                    >
+                        👁
+                    </button>
+
+                </div>
+
+                <span class="earning-label">
+                    This month
+                </span>
+
+                <strong
+                    class="earning-value"
+                    data-value="${{ '%.2f'|format(earnings.month) }}"
+                >
+                    ••••••
+                </strong>
+
+            </article>
+
+
+            <!-- CUSTOM -->
+
+            <article class="earning-card custom-earnings">
+
+                <div class="earning-card-top">
+
+                    <span class="earning-icon">⌁</span>
+
+                </div>
+
+                <span class="earning-label">
+                    Custom
+                </span>
+
+                <strong
+                    id="customAmount"
+                    class="earning-value"
+                >
+                    ••••••
+                </strong>
+
+                <div class="custom-date-row">
+
+                    <input
+                        type="date"
+                        id="earningFrom"
+                        aria-label="Start date"
+                    >
+
+                    <span>→</span>
+
+                    <input
+                        type="date"
+                        id="earningTo"
+                        aria-label="End date"
+                    >
+
+                </div>
+
+                <button
+                    type="button"
+                    class="custom-earnings-button"
+                    onclick="loadCustomEarnings()"
+                >
+                    Check
+                </button>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         RECENT ACTIVITY
+         ===================================================== -->
+
+    <section class="transactions-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="dashboard-eyebrow">ACTIVITY</span>
+                <h2>Recent activity</h2>
+            </div>
+
+            <span class="transaction-count">
+                {{ transactions|length }} recent
+            </span>
+
+        </div>
+
+
+        <div class="transaction-list">
+
+            {% if transactions %}
+
+                {% for transaction in transactions %}
+
+                <article class="transaction">
+
+                    <div class="transaction-symbol">
+                        ₿
+                    </div>
+
+                    <div class="transaction-info">
+
+                        <strong>
+                            You sold {{ transaction.title }}
+                        </strong>
+
+                        <span>
+                            {{ transaction.created_at }}
+                            · Qty {{ transaction.quantity }}
+                        </span>
+
+                    </div>
+
+                    <div class="transaction-amount">
+
+                        <button
+                            type="button"
+                            class="transaction-toggle"
+                            onclick="toggleAmount(this)"
+                        >
+                            👁
+                        </button>
+
+                        <strong
+                            class="transaction-value"
+                            data-value="+${{ '%.2f'|format(transaction.amount) }}"
+                        >
+                            ••••••
+                        </strong>
+
+                        <span class="transaction-status">
+                            Payment received
+                        </span>
+
+                    </div>
+
+                </article>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-transactions">
+
+                    <span>✦</span>
+
+                    <h3>Your activity will appear here.</h3>
+
+                    <p>
+                        Sell something, apply for a job or make your first move.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+function toggleAmount(button) {
+
+    const card = button.closest(
+        ".earning-card, .transaction-amount"
+    );
+
+    if (!card) return;
+
+    const value = card.querySelector(
+        ".earning-value, .transaction-value"
+    );
+
+    if (!value) return;
+
+    const hidden = value.textContent.trim() === "••••••";
+
+    if (hidden) {
+
+        value.textContent = value.dataset.value;
+
+        button.textContent = "🙈";
+
+    } else {
+
+        value.textContent = "••••••";
+
+        button.textContent = "👁";
+
+    }
+
+}
+
+
+async function loadCustomEarnings() {
+
+    const from = document.getElementById("earningFrom").value;
+    const to = document.getElementById("earningTo").value;
+    const output = document.getElementById("customAmount");
+
+    if (!from || !to) {
+
+        output.textContent = "••••••";
+
+        return;
+
+    }
+
+    try {
+
+        const response = await fetch(
+            `{{ url_for('dashboard.dashboard_custom_earnings') }}?from=${from}&to=${to}`
+        );
+
+        const data = await response.json();
+
+        output.dataset.value =
+            "$" + Number(data.total).toFixed(2);
+
+        output.textContent = "••••••";
+
+    } catch (error) {
+
+        output.textContent = "••••••";
+
+    }
+
+}
+
+</script>
+
 {% endblock %}

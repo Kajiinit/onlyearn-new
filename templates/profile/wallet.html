@@ -1,30 +1,1967 @@
 {% extends "base.html" %}
-{% block title %}Wallet - OnlyEarn{% endblock %}
+
+{% block title %}Wallet · OnlyEarn{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/wallet/wallet.css') }}">
+{% endblock %}
+
 {% block content %}
-<section class="page-head">
-    <div>
-        <p class="eyebrow">Wallet</p>
-        <h1>Earnings overview</h1>
+
+<main class="wallet-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="wallet-dashboard-header">
+
+        <div>
+
+            <span class="wallet-eyebrow">
+                ONLYEARN WALLET
+            </span>
+
+            <h1>
+                Your <span>Wallet.</span>
+            </h1>
+
+            <p>
+                Manage your earnings, fiat money and digital assets
+                from one place.
+            </p>
+
+        </div>
+
+        <button
+            type="button"
+            class="wallet-privacy"
+            onclick="toggleAllWalletBalances()"
+        >
+            <i class="fa-solid fa-eye"></i>
+            <span>Hide balances</span>
+        </button>
+
+    </header>
+
+
+    <!-- =====================================================
+         WALLET
+    ====================================================== -->
+
+    <section class="wallet-total-card">
+
+        <div class="wallet-total-glow"></div>
+
+        <div class="wallet-total-top">
+
+            <div>
+
+                <span class="wallet-label">
+                    Total wallet value
+                </span>
+
+                <!-- TOTAL WALLET VALUE -->
+
+                <div class="wallet-value-with-eye">
+
+                    <strong
+                        id="totalBalance"
+                        class="wallet-total-amount protected-wallet-value"
+                        data-value="{{ '%.2f'|format(total_balance_usd or 0) }}"
+                    >
+                        ******
+                    </strong>
+
+                    <button
+                        type="button"
+                        class="individual-wallet-eye"
+                        onclick="toggleIndividualWalletValue(this)"
+                        aria-label="Show total wallet value"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+
+                </div>
+
+                <span class="wallet-total-sub">
+                    USD equivalent · All pockets
+                </span>
+
+            </div>
+
+            <div class="wallet-balance-symbol">
+                ◈
+            </div>
+
+        </div>
+
+
+        <div class="wallet-total-footer">
+
+            <!-- PENDING -->
+
+            <div>
+
+                <span>
+                    Pending
+                </span>
+
+                <div class="wallet-value-with-eye">
+
+                    <strong
+                        class="protected-wallet-value"
+                        data-value="{{ '%.2f'|format(total_pending_usd or 0) }}"
+                    >
+                        ******
+                    </strong>
+
+                    <button
+                        type="button"
+                        class="individual-wallet-eye"
+                        onclick="toggleIndividualWalletValue(this)"
+                        aria-label="Show pending balance"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- LIFETIME EARNINGS -->
+
+            <div>
+
+                <span>
+                    Lifetime earnings
+                </span>
+
+                <div class="wallet-value-with-eye">
+
+                    <strong
+                        class="protected-wallet-value"
+                        data-value="{{ '%.2f'|format(total_lifetime_earnings_usd or 0) }}"
+                    >
+                        ******
+                    </strong>
+
+                    <button
+                        type="button"
+                        class="individual-wallet-eye"
+                        onclick="toggleIndividualWalletValue(this)"
+                        aria-label="Show lifetime earnings"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div>
+
+                <span>
+                    Wallet status
+                </span>
+
+                <strong>
+                    Active
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         WALLET ACTIONS
+    ====================================================== -->
+
+    <section class="wallet-actions-section">
+
+        <div class="wallet-action-grid">
+
+            <button
+                type="button"
+                class="wallet-quick-action"
+                onclick="showWalletMessage('Deposit')"
+            >
+                <span class="quick-action-icon">
+                    <i class="fa-solid fa-arrow-down"></i>
+                </span>
+
+                <span>
+                    <strong>Deposit</strong>
+                    <small>Add funds</small>
+                </span>
+            </button>
+
+
+            <button
+                type="button"
+                class="wallet-quick-action"
+                onclick="showWalletMessage('Withdraw')"
+            >
+                <span class="quick-action-icon">
+                    <i class="fa-solid fa-arrow-up"></i>
+                </span>
+
+                <span>
+                    <strong>Withdraw</strong>
+                    <small>Move funds out</small>
+                </span>
+            </button>
+
+
+            <button
+                type="button"
+                class="wallet-quick-action"
+                onclick="showWalletMessage('Send')"
+            >
+                <span class="quick-action-icon">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </span>
+
+                <span>
+                    <strong>Send</strong>
+                    <small>Send money</small>
+                </span>
+            </button>
+
+
+            <button
+                type="button"
+                class="wallet-quick-action"
+                onclick="showWalletMessage('Receive')"
+            >
+                <span class="quick-action-icon">
+                    <i class="fa-solid fa-download"></i>
+                </span>
+
+                <span>
+                    <strong>Receive</strong>
+                    <small>Get paid</small>
+                </span>
+            </button>
+
+
+            <button
+                type="button"
+                class="wallet-quick-action"
+                onclick="openExchange()"
+            >
+                <span class="quick-action-icon">
+                    <i class="fa-solid fa-right-left"></i>
+                </span>
+
+                <span>
+                    <strong>Exchange</strong>
+                    <small>Convert assets</small>
+                </span>
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         OPENABLE WALLET / PURSE
+    ====================================================== -->
+
+    <section class="wallet-purse-section">
+
+        <div class="wallet-section-heading">
+
+            <div>
+
+                <span class="wallet-eyebrow">
+                    YOUR WALLET
+                </span>
+
+                <h2>
+                    Your money, organized.
+                </h2>
+
+            </div>
+
+            <span class="wallet-private">
+                Private wallet
+            </span>
+
+        </div>
+
+
+        <!-- =================================================
+             PURSE
+        ================================================== -->
+
+        <div
+            class="wallet-purse"
+            id="walletPurse"
+        >
+
+            <!-- PURSE BACK -->
+
+            <div class="wallet-purse-back">
+
+                <div class="wallet-purse-brand">
+                    <span>ONLY</span>EARN
+                </div>
+
+                <div class="wallet-purse-symbol">
+                    ◈
+                </div>
+
+                <div class="wallet-purse-label">
+                    DIGITAL WALLET
+                </div>
+
+            </div>
+
+
+            <!-- PURSE FLAP -->
+
+            <div class="wallet-purse-flap">
+
+                <div class="wallet-purse-flap-inner">
+
+                    <span class="wallet-purse-small">
+                        ONLYEARN
+                    </span>
+
+                    <strong>
+                        WALLET
+                    </strong>
+
+                    <span class="wallet-purse-lock">
+                        <i class="fa-solid fa-lock"></i>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- PURSE CONTENT -->
+
+            <div class="wallet-purse-content">
+
+                <div class="wallet-purse-toolbar">
+
+                    <div>
+
+                        <span>
+                            TOTAL BALANCE
+                        </span>
+
+                        <strong
+                            class="purse-total-value protected-wallet-value"
+                            data-value="{{ '%.2f'|format(total_balance_usd or 0) }}"
+                        >
+                            ******
+                        </strong>
+
+                        <small>
+                            USD equivalent
+                        </small>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="purse-privacy-button"
+                        onclick="toggleAllWalletBalances()"
+                        aria-label="Toggle wallet balances"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+
+                </div>
+
+
+                <!-- =============================================
+                     POCKETS
+                ============================================== -->
+
+                <div class="wallet-purse-pockets">
+
+
+                    <!-- EARNINGS -->
+
+                    <button
+                        type="button"
+                        class="purse-pocket purse-pocket-earnings"
+                        onclick="openWalletPocket('earnings')"
+                    >
+
+                        <span class="purse-pocket-tab"></span>
+
+                        <span class="purse-pocket-icon">
+                            <i class="fa-solid fa-coins"></i>
+                        </span>
+
+                        <span class="purse-pocket-content">
+
+                            <span class="purse-pocket-label">
+                                EARNINGS
+                            </span>
+
+                            <strong
+                                class="protected-wallet-value"
+                                data-value="{{ '%.2f'|format(total_lifetime_earnings_usd or 0) }}"
+                            >
+                                ******
+                            </strong>
+
+                            <small>
+                                Money earned
+                            </small>
+
+                        </span>
+
+                        <span class="purse-pocket-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <!-- FIAT -->
+
+                    <button
+                        type="button"
+                        class="purse-pocket purse-pocket-fiat"
+                        onclick="openWalletPocket('fiat')"
+                    >
+
+                        <span class="purse-pocket-tab"></span>
+
+                        <span class="purse-pocket-icon">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </span>
+
+                        <span class="purse-pocket-content">
+
+                            <span class="purse-pocket-label">
+                                FIAT
+                            </span>
+
+                            <strong>
+                                {{ fiat_assets|length }}
+                                <small>currencies</small>
+                            </strong>
+
+                            <small>
+                                AED · USD · EUR · GBP
+                            </small>
+
+                        </span>
+
+                        <span class="purse-pocket-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <!-- CRYPTO -->
+
+                    <button
+                        type="button"
+                        class="purse-pocket purse-pocket-crypto"
+                        onclick="openWalletPocket('crypto')"
+                    >
+
+                        <span class="purse-pocket-tab"></span>
+
+                        <span class="purse-pocket-icon">
+                            <i class="fa-brands fa-bitcoin"></i>
+                        </span>
+
+                        <span class="purse-pocket-content">
+
+                            <span class="purse-pocket-label">
+                                CRYPTO
+                            </span>
+
+                            <strong>
+                                {{ crypto_assets|length }}
+                                <small>assets</small>
+                            </strong>
+
+                            <small>
+                                BTC · ETH · USDT · USDC
+                            </small>
+
+                        </span>
+
+                        <span class="purse-pocket-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <!-- PENDING -->
+
+                    <button
+                        type="button"
+                        class="purse-pocket purse-pocket-pending"
+                        onclick="openWalletPocket('pending')"
+                    >
+
+                        <span class="purse-pocket-tab"></span>
+
+                        <span class="purse-pocket-icon">
+                            <i class="fa-solid fa-clock"></i>
+                        </span>
+
+                        <span class="purse-pocket-content">
+
+                            <span class="purse-pocket-label">
+                                PENDING
+                            </span>
+
+                            <strong
+                                class="protected-wallet-value"
+                                data-value="{{ '%.2f'|format(total_pending_usd or 0) }}"
+                            >
+                                ******
+                            </strong>
+
+                            <small>
+                                Waiting to clear
+                            </small>
+
+                        </span>
+
+                        <span class="purse-pocket-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+
+                <!-- PURSE FOOTER -->
+
+                <div class="wallet-purse-footer">
+
+                    <span>
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Protected wallet
+                    </span>
+
+                    <span>
+                        {{ fiat_assets|length + crypto_assets|length }}
+                        assets
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         EARNINGS
+    ====================================================== -->
+
+    <section class="wallet-earnings-card">
+
+        <div>
+
+            <span class="wallet-eyebrow">
+                ONLYEARN
+            </span>
+
+            <h2>
+                Your earnings stay with you.
+            </h2>
+
+            <p>
+                Money you earn through OnlyJobs, OnlySell,
+                OnlyAdvice and other OnlyEarn services can
+                flow directly into your wallet.
+            </p>
+
+        </div>
+
+        <strong
+            class="protected-wallet-value"
+            data-value="{{ '%.2f'|format(total_lifetime_earnings_usd or 0) }}"
+        >
+            ******
+        </strong>
+
+    </section>
+
+
+    <!-- =====================================================
+         ACTIVITY
+    ====================================================== -->
+
+    <section class="wallet-transactions-section">
+
+        <div class="wallet-section-heading">
+
+            <div>
+
+                <span class="wallet-eyebrow">
+                    ACTIVITY
+                </span>
+
+                <h2>
+                    Recent activity
+                </h2>
+
+            </div>
+
+            <span class="wallet-private">
+                Latest 30 transactions
+            </span>
+
+        </div>
+
+
+        {% if transactions %}
+
+        <div class="wallet-asset-list">
+
+            {% for transaction in transactions %}
+
+            <article class="wallet-asset-row">
+
+                <div class="asset-main">
+
+                    <div class="asset-logo fiat-logo">
+
+                        {% if transaction.transaction_type == "exchange" %}
+                            ⇄
+                        {% elif transaction.amount > 0 %}
+                            +
+                        {% else %}
+                            −
+                        {% endif %}
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ transaction.description
+                               or transaction.transaction_type|title }}
+                        </strong>
+
+                        <span>
+                            {{ transaction.created_at }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="asset-balance">
+
+                    <strong>
+                        {{ transaction.currency }}
+                    </strong>
+
+                    <span>
+                        Balance movement
+                    </span>
+
+                </div>
+
+
+                <div class="asset-value">
+
+                    <strong
+                        class="{% if transaction.amount > 0 %}wallet-positive{% else %}wallet-negative{% endif %}"
+                    >
+                        {% if transaction.amount > 0 %}
+                            +
+                        {% endif %}
+                        {{ transaction.amount }}
+                    </strong>
+
+                    <span>
+                        {{ transaction.status }}
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="asset-more"
+                    onclick="showTransactionInfo(
+                        '{{ transaction.description or transaction.transaction_type|title }}'
+                    )"
+                >
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="wallet-empty">
+
+            <div>◌</div>
+
+            <h3>
+                No activity yet
+            </h3>
+
+            <p>
+                Earnings, payments, purchases, sales,
+                exchanges and withdrawals will appear here.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =====================================================
+         EXCHANGE MODAL
+    ====================================================== -->
+
+    <div
+        class="exchange-modal"
+        id="exchangeModal"
+    >
+
+        <div class="exchange-modal-inner">
+
+            <button
+                type="button"
+                class="exchange-modal-close"
+                onclick="closeExchange()"
+            >
+                ×
+            </button>
+
+            <span class="wallet-eyebrow">
+                MOVE VALUE
+            </span>
+
+            <h2>
+                Exchange
+            </h2>
+
+            <p class="exchange-modal-description">
+                Convert between your fiat and crypto balances.
+            </p>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('wallet.exchange') }}"
+                id="exchangeForm"
+            >
+
+                <div class="exchange-field">
+
+                    <label>
+                        You send
+                    </label>
+
+                    <div class="exchange-input">
+
+                        <input
+                            type="number"
+                            name="from_amount"
+                            id="exchangeAmount"
+                            min="0"
+                            step="any"
+                            placeholder="0.00"
+                            required
+                        >
+
+                        <select
+                            name="from_currency"
+                            id="fromCurrency"
+                        >
+
+                            {% for currency in supported_fiat %}
+
+                            <option value="{{ currency }}">
+                                {{ currency }}
+                            </option>
+
+                            {% endfor %}
+
+                            {% for currency in supported_crypto %}
+
+                            <option value="{{ currency }}">
+                                {{ currency }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="exchange-switch"
+                    onclick="swapCurrencies()"
+                >
+                    ⇅
+                </button>
+
+
+                <div class="exchange-field">
+
+                    <label>
+                        You receive
+                    </label>
+
+                    <div class="exchange-input">
+
+                        <input
+                            type="text"
+                            id="exchangeResult"
+                            placeholder="0.00"
+                            readonly
+                        >
+
+                        <select
+                            name="to_currency"
+                            id="toCurrency"
+                        >
+
+                            {% for currency in supported_fiat %}
+
+                            <option value="{{ currency }}">
+                                {{ currency }}
+                            </option>
+
+                            {% endfor %}
+
+                            {% for currency in supported_crypto %}
+
+                            <option value="{{ currency }}">
+                                {{ currency }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="exchange-info">
+
+                    <div>
+
+                        <span>
+                            Rate
+                        </span>
+
+                        <strong id="exchangeRate">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Fee
+                        </span>
+
+                        <strong id="exchangeFee">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="wallet-exchange-button"
+                >
+                    Confirm exchange
+                    <span>→</span>
+                </button>
+
+            </form>
+
+        </div>
+
     </div>
-</section>
 
-<section class="stats-grid">
-    <article class="stat-card">
-        <span>${{ "%.2f"|format(wallet.balance if wallet else 0) }}</span>
-        <p>Available balance</p>
-    </article>
-    <article class="stat-card">
-        <span>${{ "%.2f"|format(wallet.pending if wallet else 0) }}</span>
-        <p>Pending funds</p>
-    </article>
-    <article class="stat-card">
-        <span>${{ "%.2f"|format(wallet.lifetime_earnings if wallet else 0) }}</span>
-        <p>Lifetime earnings</p>
-    </article>
-</section>
+</main>
 
-<section class="panel">
-    <h2>Wallet structure</h2>
-    <p class="muted">This page is ready for future deposits, withdrawals, escrow, and transaction history.</p>
-</section>
+
+<script>
+
+const walletRates = {
+    USD: 1,
+    AED: 0.272294,
+    EUR: 1.17,
+    GBP: 1.35,
+    BTC: 117000,
+    ETH: 4300,
+    USDT: 1,
+    USDC: 1
+};
+
+const walletFeeRate = 0.005;
+
+let balancesHidden = true;
+
+
+/* =========================================================
+   INDIVIDUAL BALANCE VISIBILITY
+========================================================= */
+
+function toggleIndividualWalletValue(button) {
+
+    const container =
+        button.closest(".wallet-value-with-eye");
+
+    if (!container) {
+        return;
+    }
+
+    const value =
+        container.querySelector(".protected-wallet-value");
+
+    if (!value) {
+        return;
+    }
+
+    const isHidden =
+        value.textContent.trim() === "******";
+
+
+    if (isHidden) {
+
+        value.textContent =
+            value.dataset.value;
+
+        button.innerHTML =
+            '<i class="fa-solid fa-eye-slash"></i>';
+
+        button.setAttribute(
+            "aria-label",
+            "Hide balance"
+        );
+
+    } else {
+
+        value.textContent =
+            "******";
+
+        button.innerHTML =
+            '<i class="fa-solid fa-eye"></i>';
+
+        button.setAttribute(
+            "aria-label",
+            "Show balance"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   BALANCE VISIBILITY
+========================================================= */
+
+function toggleAllWalletBalances() {
+
+    balancesHidden = !balancesHidden;
+
+
+    document
+        .querySelectorAll(".protected-wallet-value")
+        .forEach(element => {
+
+            if (balancesHidden) {
+
+                element.textContent =
+                    "******";
+
+            } else {
+
+                element.textContent =
+                    element.dataset.value;
+
+            }
+
+        });
+
+
+    document
+        .querySelectorAll(".asset-usd-value")
+        .forEach(element => {
+
+            if (balancesHidden) {
+
+                element.textContent =
+                    "******";
+
+            } else {
+
+                const currency =
+                    element.dataset.currency;
+
+                const amount =
+                    parseFloat(
+                        element.dataset.amount
+                    ) || 0;
+
+                const rate =
+                    walletRates[currency] || 0;
+
+                const usd =
+                    amount * rate;
+
+                element.textContent =
+                    "$" + usd.toFixed(2);
+
+            }
+
+        });
+
+
+    /* Update individual eye buttons */
+
+    document
+        .querySelectorAll(".individual-wallet-eye")
+        .forEach(button => {
+
+            if (balancesHidden) {
+
+                button.innerHTML =
+                    '<i class="fa-solid fa-eye"></i>';
+
+                button.setAttribute(
+                    "aria-label",
+                    "Show balance"
+                );
+
+            } else {
+
+                button.innerHTML =
+                    '<i class="fa-solid fa-eye-slash"></i>';
+
+                button.setAttribute(
+                    "aria-label",
+                    "Hide balance"
+                );
+
+            }
+
+        });
+
+
+    const button =
+        document.querySelector(".wallet-privacy");
+
+    if (button) {
+
+        const icon =
+            button.querySelector("i");
+
+        const label =
+            button.querySelector("span");
+
+
+        if (balancesHidden) {
+
+            icon.className =
+                "fa-solid fa-eye";
+
+            label.textContent =
+                "Show balances";
+
+        } else {
+
+            icon.className =
+                "fa-solid fa-eye-slash";
+
+            label.textContent =
+                "Hide balances";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   ASSET FILTER
+========================================================= */
+
+function filterAssets(type, button) {
+
+    document
+        .querySelectorAll(".wallet-tab")
+        .forEach(tab => {
+
+            tab.classList.remove("active");
+
+        });
+
+
+    button.classList.add("active");
+
+
+    document
+        .querySelectorAll(
+            ".wallet-asset-row[data-asset-type]"
+        )
+        .forEach(row => {
+
+            if (
+                type === "all" ||
+                row.dataset.assetType === type
+            ) {
+
+                row.style.display = "";
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+}
+
+
+/* =========================================================
+   WALLET POCKETS
+========================================================= */
+
+const walletPocketData = {
+
+    earnings: {
+        icon: "fa-solid fa-wallet",
+        eyebrow: "EARNINGS POCKET",
+        title: "Your Earnings",
+        description:
+            "Money earned through the OnlyEarn ecosystem."
+    },
+
+    fiat: {
+        icon: "fa-solid fa-money-bill-wave",
+        eyebrow: "FIAT POCKET",
+        title: "Fiat Money",
+        description:
+            "Your traditional currencies and available balances."
+    },
+
+    crypto: {
+        icon: "fa-brands fa-bitcoin",
+        eyebrow: "CRYPTO POCKET",
+        title: "Digital Assets",
+        description:
+            "Your cryptocurrency and digital asset balances."
+    },
+
+    pending: {
+        icon: "fa-solid fa-clock",
+        eyebrow: "PENDING POCKET",
+        title: "Pending Funds",
+        description:
+            "Money that is currently waiting to become available."
+    }
+
+};
+
+
+function openWalletPocket(type) {
+
+    const pocket =
+        walletPocketData[type];
+
+    if (!pocket) {
+        return;
+    }
+
+
+    const overlay =
+        document.getElementById(
+            "walletPocketOverlay"
+        );
+
+    const icon =
+        document.getElementById(
+            "pocketPanelIcon"
+        );
+
+    const eyebrow =
+        document.getElementById(
+            "pocketPanelEyebrow"
+        );
+
+    const title =
+        document.getElementById(
+            "pocketPanelTitle"
+        );
+
+    const description =
+        document.getElementById(
+            "pocketPanelDescription"
+        );
+
+    const content =
+        document.getElementById(
+            "pocketPanelContent"
+        );
+
+
+    icon.innerHTML =
+        `<i class="${pocket.icon}"></i>`;
+
+    eyebrow.textContent =
+        pocket.eyebrow;
+
+    title.textContent =
+        pocket.title;
+
+    description.textContent =
+        pocket.description;
+
+
+    content.innerHTML =
+        buildPocketContent(type);
+
+
+    overlay.classList.add("active");
+
+    document.body.classList.add(
+        "wallet-pocket-open"
+    );
+
+}
+
+
+function closeWalletPocket() {
+
+    const overlay =
+        document.getElementById(
+            "walletPocketOverlay"
+        );
+
+    overlay.classList.remove("active");
+
+    document.body.classList.remove(
+        "wallet-pocket-open"
+    );
+
+}
+
+
+function buildPocketContent(type) {
+
+    if (type === "earnings") {
+
+        return `
+            <div class="pocket-balance-card">
+
+                <span>
+                    Available earnings
+                </span>
+
+                <strong
+                    class="protected-wallet-value"
+                    data-value="{{ '%.2f'|format(total_lifetime_earnings_usd or 0) }}"
+                >
+                    ******
+                </strong>
+
+                <small>
+                    USD equivalent
+                </small>
+
+            </div>
+
+
+            <div class="pocket-source-list">
+
+                <div class="pocket-source-row">
+
+                    <span>
+                        <i class="fa-solid fa-briefcase"></i>
+                        OnlyJobs
+                    </span>
+
+                    <strong>
+                        ******
+                    </strong>
+
+                </div>
+
+
+                <div class="pocket-source-row">
+
+                    <span>
+                        <i class="fa-solid fa-store"></i>
+                        OnlySell
+                    </span>
+
+                    <strong>
+                        ******
+                    </strong>
+
+                </div>
+
+
+                <div class="pocket-source-row">
+
+                    <span>
+                        <i class="fa-solid fa-comments"></i>
+                        OnlyAdvice
+                    </span>
+
+                    <strong>
+                        ******
+                    </strong>
+
+                </div>
+
+
+                <div class="pocket-source-row">
+
+                    <span>
+                        <i class="fa-solid fa-layer-group"></i>
+                        Other OnlyEarn
+                    </span>
+
+                    <strong>
+                        ******
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="pocket-actions">
+
+                <button
+                    type="button"
+                    onclick="showWalletMessage('Withdraw earnings')"
+                >
+                    <i class="fa-solid fa-arrow-up"></i>
+                    Withdraw
+                </button>
+
+                <button
+                    type="button"
+                    onclick="showWalletMessage('Transfer earnings')"
+                >
+                    <i class="fa-solid fa-arrow-right"></i>
+                    Transfer
+                </button>
+
+            </div>
+        `;
+    }
+
+
+    if (type === "fiat") {
+
+        return `
+            <div class="pocket-asset-list">
+
+                {% for asset in fiat_assets %}
+
+                <div class="pocket-asset-row">
+
+                    <div class="pocket-asset-left">
+
+                        <span class="pocket-currency-icon fiat-logo">
+                            {{ asset.currency }}
+                        </span>
+
+                        <span>
+
+                            <strong>
+                                {{ asset.currency }}
+                            </strong>
+
+                            <small>
+                                Fiat balance
+                            </small>
+
+                        </span>
+
+                    </div>
+
+
+                    <strong
+                        class="protected-wallet-value"
+                        data-value="{{ '%.2f'|format(asset.balance or 0) }}"
+                    >
+                        ******
+                    </strong>
+
+                </div>
+
+                {% else %}
+
+                <div class="pocket-empty">
+                    No fiat balances yet.
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="pocket-actions">
+
+                <button
+                    type="button"
+                    onclick="showWalletMessage('Deposit fiat')"
+                >
+                    <i class="fa-solid fa-arrow-down"></i>
+                    Deposit
+                </button>
+
+                <button
+                    type="button"
+                    onclick="showWalletMessage('Withdraw fiat')"
+                >
+                    <i class="fa-solid fa-arrow-up"></i>
+                    Withdraw
+                </button>
+
+            </div>
+        `;
+    }
+
+
+    if (type === "crypto") {
+
+        return `
+            <div class="pocket-asset-list">
+
+                {% for asset in crypto_assets %}
+
+                <div class="pocket-asset-row">
+
+                    <div class="pocket-asset-left">
+
+                        <span class="pocket-currency-icon crypto-logo">
+
+                            {% if asset.currency == "BTC" %}
+
+                                ₿
+
+                            {% elif asset.currency == "ETH" %}
+
+                                Ξ
+
+                            {% else %}
+
+                                {{ asset.currency[:1] }}
+
+                            {% endif %}
+
+                        </span>
+
+
+                        <span>
+
+                            <strong>
+                                {{ asset.currency }}
+                            </strong>
+
+                            <small>
+                                Digital asset
+                            </small>
+
+                        </span>
+
+                    </div>
+
+
+                    <strong
+                        class="protected-wallet-value"
+                        data-value="{{ asset.balance or 0 }}"
+                    >
+                        ******
+                    </strong>
+
+                </div>
+
+                {% else %}
+
+                <div class="pocket-empty">
+                    No crypto assets yet.
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="pocket-actions">
+
+                <button
+                    type="button"
+                    onclick="showWalletMessage('Buy crypto')"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    Buy
+                </button>
+
+                <button
+                    type="button"
+                    onclick="showWalletMessage('Send crypto')"
+                >
+                    <i class="fa-solid fa-paper-plane"></i>
+                    Send
+                </button>
+
+                <button
+                    type="button"
+                    onclick="openExchange()"
+                >
+                    <i class="fa-solid fa-right-left"></i>
+                    Exchange
+                </button>
+
+            </div>
+        `;
+    }
+
+
+    if (type === "pending") {
+
+        return `
+            <div class="pocket-balance-card pocket-pending-card">
+
+                <span>
+                    Pending balance
+                </span>
+
+                <strong
+                    class="protected-wallet-value"
+                    data-value="{{ '%.2f'|format(total_pending_usd or 0) }}"
+                >
+                    ******
+                </strong>
+
+                <small>
+                    USD equivalent
+                </small>
+
+            </div>
+
+
+            <div class="pocket-pending-info">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                <div>
+
+                    <strong>
+                        Funds are being processed
+                    </strong>
+
+                    <p>
+                        Pending funds will become available
+                        once the related transaction has cleared.
+                    </p>
+
+                </div>
+
+            </div>
+        `;
+    }
+
+
+    return "";
+
+}
+
+
+/* =========================================================
+   CLOSE POCKET WHEN CLICKING OUTSIDE
+========================================================= */
+
+document
+    .getElementById("walletPocketOverlay")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (event.target === this) {
+
+                closeWalletPocket();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   CLOSE POCKET WITH ESCAPE
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Escape" &&
+            document
+                .getElementById("walletPocketOverlay")
+                .classList.contains("active")
+        ) {
+
+            closeWalletPocket();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   EXCHANGE
+========================================================= */
+
+function openExchange() {
+
+    const modal =
+        document.getElementById(
+            "exchangeModal"
+        );
+
+    modal.classList.add("active");
+
+    calculateExchange();
+
+}
+
+
+function closeExchange() {
+
+    document
+        .getElementById("exchangeModal")
+        .classList.remove("active");
+
+}
+
+
+function swapCurrencies() {
+
+    const from =
+        document.getElementById(
+            "fromCurrency"
+        );
+
+    const to =
+        document.getElementById(
+            "toCurrency"
+        );
+
+    const oldFrom =
+        from.value;
+
+    from.value =
+        to.value;
+
+    to.value =
+        oldFrom;
+
+    calculateExchange();
+
+}
+
+
+function calculateExchange() {
+
+    const amount =
+        parseFloat(
+            document.getElementById(
+                "exchangeAmount"
+            ).value
+        ) || 0;
+
+
+    const from =
+        document.getElementById(
+            "fromCurrency"
+        ).value;
+
+
+    const to =
+        document.getElementById(
+            "toCurrency"
+        ).value;
+
+
+    const result =
+        document.getElementById(
+            "exchangeResult"
+        );
+
+
+    const rateElement =
+        document.getElementById(
+            "exchangeRate"
+        );
+
+
+    const feeElement =
+        document.getElementById(
+            "exchangeFee"
+        );
+
+
+    if (
+        !amount ||
+        amount <= 0 ||
+        from === to
+    ) {
+
+        result.value =
+            "";
+
+        rateElement.textContent =
+            from === to
+                ? "1:1"
+                : "—";
+
+        feeElement.textContent =
+            "—";
+
+        return;
+
+    }
+
+
+    const fromUsd =
+        walletRates[from];
+
+    const toUsd =
+        walletRates[to];
+
+
+    if (!fromUsd || !toUsd) {
+
+        result.value =
+            "";
+
+        rateElement.textContent =
+            "Unavailable";
+
+        feeElement.textContent =
+            "—";
+
+        return;
+
+    }
+
+
+    const rate =
+        fromUsd / toUsd;
+
+    const gross =
+        amount * rate;
+
+    const fee =
+        gross * walletFeeRate;
+
+    const received =
+        gross - fee;
+
+
+    const decimals =
+        ["BTC", "ETH"].includes(to)
+            ? 8
+            : 2;
+
+
+    result.value =
+        received.toFixed(decimals);
+
+
+    rateElement.textContent =
+        `1 ${from} ≈ ${rate.toFixed(
+            decimals
+        )} ${to}`;
+
+
+    feeElement.textContent =
+        `${fee.toFixed(
+            decimals
+        )} ${to}`;
+
+}
+
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+function showWalletMessage(action) {
+
+    alert(
+        `${action} functionality will be connected next.`
+    );
+
+}
+
+
+function showAssetInfo(currency) {
+
+    alert(
+        `${currency} wallet options will be connected next.`
+    );
+
+}
+
+
+function showTransactionInfo(description) {
+
+    alert(
+        description
+    );
+
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+document
+    .getElementById("exchangeAmount")
+    .addEventListener(
+        "input",
+        calculateExchange
+    );
+
+
+document
+    .getElementById("fromCurrency")
+    .addEventListener(
+        "change",
+        calculateExchange
+    );
+
+
+document
+    .getElementById("toCurrency")
+    .addEventListener(
+        "change",
+        calculateExchange
+    );
+
+
+document
+    .getElementById("exchangeModal")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target === this
+            ) {
+
+                closeExchange();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   START WITH BALANCES HIDDEN
+========================================================= */
+
+balancesHidden = true;
+
+
+document
+    .querySelectorAll(".protected-wallet-value")
+    .forEach(element => {
+
+        element.textContent =
+            "******";
+
+    });
+
+
+document
+    .querySelectorAll(".asset-usd-value")
+    .forEach(element => {
+
+        element.textContent =
+            "******";
+
+    });
+
+
+/* =========================================================
+   INITIAL INDIVIDUAL EYE STATE
+========================================================= */
+
+document
+    .querySelectorAll(".individual-wallet-eye")
+    .forEach(button => {
+
+        button.innerHTML =
+            '<i class="fa-solid fa-eye"></i>';
+
+        button.setAttribute(
+            "aria-label",
+            "Show balance"
+        );
+
+    });
+
+</script>
+
 {% endblock %}

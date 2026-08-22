@@ -1,8 +1,138 @@
 {% extends "base.html" %}
+
 {% block title %}About OnlyEarn{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/about.css') }}">
+{% endblock %}
+
+
 {% block content %}
-<section class="neon-info-page">
-    <header class="neon-info-header"><p class="panel-label">ABOUT ONLYEARN</p><h1>More ways to <em>work, sell, and grow.</em></h1><p>OnlyEarn is an all-in-one digital marketplace designed to help individuals and businesses work, trade, and grow together.</p></header>
-    <div class="neon-info-grid"><article class="neon-info-card"><span>01</span><h2>One connected platform</h2><p>Freelancing, e-commerce, secure payments, and professional collaboration come together in one seamless ecosystem—making it easier to earn income and discover new opportunities.</p></article><article class="neon-info-card"><span>02</span><h2>Built for opportunity</h2><p>Freelancers can find meaningful work, businesses can hire skilled professionals, and entrepreneurs can buy and sell products with confidence.</p></article><article class="neon-info-card"><span>03</span><h2>Made to empower</h2><p>Our mission is to provide a trusted, innovative, and accessible place where people can build, connect, and succeed in the digital economy.</p></article></div>
+
+<section class="about-neon-page">
+
+    <header class="about-neon-header">
+
+        <p class="about-label">
+            ABOUT ONLYEARN
+        </p>
+
+        <h1>
+            More ways to 
+            <span>work, sell, and grow.</span>
+        </h1>
+
+        <p class="about-description">
+            OnlyEarn is an all-in-one digital marketplace designed to help individuals and businesses work, trade, and grow together.
+        </p>
+
+    </header>
+
+
+    <div class="about-flip-grid">
+
+
+        <article class="about-flip-card">
+
+            <div class="about-card-inner">
+
+                <div class="about-card-front">
+
+                    <span>01</span>
+
+                    <h2>
+                        One connected platform
+                    </h2>
+
+                    <p>
+                        Hover to discover
+                    </p>
+
+                </div>
+
+
+                <div class="about-card-back">
+
+                    <p>
+                        Freelancing, e-commerce, secure payments, and professional collaboration come together in one seamless ecosystem—making it easier to earn income and discover new opportunities.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <article class="about-flip-card">
+
+            <div class="about-card-inner">
+
+                <div class="about-card-front">
+
+                    <span>02</span>
+
+                    <h2>
+                        Built for opportunity
+                    </h2>
+
+                    <p>
+                        Hover to discover
+                    </p>
+
+                </div>
+
+
+                <div class="about-card-back">
+
+                    <p>
+                        Freelancers can find meaningful work, businesses can hire skilled professionals, and entrepreneurs can buy and sell products with confidence.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <article class="about-flip-card">
+
+            <div class="about-card-inner">
+
+                <div class="about-card-front">
+
+                    <span>03</span>
+
+                    <h2>
+                        Made to empower
+                    </h2>
+
+                    <p>
+                        Hover to discover
+                    </p>
+
+                </div>
+
+
+                <div class="about-card-back">
+
+                    <p>
+                        Our mission is to provide a trusted, innovative, and accessible place where people can build, connect, and succeed in the digital economy.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+    </div>
+
+
 </section>
+
 {% endblock %}

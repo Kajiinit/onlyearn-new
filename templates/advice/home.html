@@ -1,0 +1,569 @@
+{% extends "base.html" %}
+
+{% block title %}
+OnlyAdvice · Expert guidance on OnlyEarn
+{% endblock %}
+
+{% block content %}
+
+<div class="advice-page">
+
+    <!-- HERO -->
+    <section class="advice-hero">
+
+        <div class="advice-hero-content">
+
+            <span class="panel-label">
+                ONLYADVICE
+            </span>
+
+            <h1>
+                Talk to the right
+                <span>expert.</span>
+            </h1>
+
+            <p>
+                Get direct guidance from professionals, specialists,
+                founders, consultants, and experienced people who know
+                what they're talking about.
+            </p>
+
+            <div class="advice-hero-actions">
+
+                <a
+                    href="{{ url_for('advice.advisors') }}"
+                    class="nav-cta"
+                >
+                    Find an Expert
+                </a>
+
+                {% if current_user %}
+
+                    <a
+                        href="{{ url_for('advice.become_advisor') }}"
+                        class="advice-secondary-btn"
+                    >
+                        Become an Advisor
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{{ url_for('auth.register') }}"
+                        class="advice-secondary-btn"
+                    >
+                        Become an Advisor
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SPECIALTIES -->
+    <section class="advice-section">
+
+        <div class="advice-section-heading">
+
+            <span class="panel-label">
+                EXPLORE EXPERTISE
+            </span>
+
+            <h2>
+                Advice for real decisions.
+            </h2>
+
+            <p>
+                Find people with experience in the areas
+                where you need guidance.
+            </p>
+
+        </div>
+
+
+        <div class="advice-specialties">
+
+            <a
+                href="{{ url_for('advice.advisors') }}?category=Legal"
+                class="advice-specialty-card"
+            >
+
+                <span class="advice-specialty-icon">
+                    ⚖
+                </span>
+
+                <h3>
+                    Legal
+                </h3>
+
+                <p>
+                    Connect with legal professionals for
+                    general guidance and next steps.
+                </p>
+
+                <span class="advice-card-link">
+                    Explore experts →
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('advice.advisors') }}?category=Real%20Estate"
+                class="advice-specialty-card"
+            >
+
+                <span class="advice-specialty-icon">
+                    ⌂
+                </span>
+
+                <h3>
+                    Real Estate
+                </h3>
+
+                <p>
+                    Get help evaluating property decisions,
+                    markets, and opportunities.
+                </p>
+
+                <span class="advice-card-link">
+                    Explore experts →
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('advice.advisors') }}?category=Health"
+                class="advice-specialty-card"
+            >
+
+                <span class="advice-specialty-icon">
+                    ✚
+                </span>
+
+                <h3>
+                    Health
+                </h3>
+
+                <p>
+                    Find qualified professionals for general
+                    wellness guidance and second opinions.
+                </p>
+
+                <span class="advice-card-link">
+                    Explore experts →
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('advice.advisors') }}?category=Business%20%26%20Creative"
+                class="advice-specialty-card"
+            >
+
+                <span class="advice-specialty-icon">
+                    ✦
+                </span>
+
+                <h3>
+                    Business & Creative
+                </h3>
+
+                <p>
+                    Learn from founders, consultants, actors,
+                    and creative specialists.
+                </p>
+
+                <span class="advice-card-link">
+                    Explore experts →
+                </span>
+
+            </a>
+
+<a
+    href="{{ url_for('advice.advisors') }}?category=Food%20%26%20Beverage"
+    class="advice-specialty-card"
+>
+
+    <span class="advice-specialty-icon">
+        🍽
+    </span>
+
+    <h3>
+        Food & Beverage
+    </h3>
+
+    <p>
+        Connect with chefs, bartenders, hospitality
+        professionals, and F&B specialists.
+    </p>
+
+    <span class="advice-card-link">
+        Explore experts →
+    </span>
+
+</a>
+
+
+<a
+    href="{{ url_for('advice.advisors') }}?category=School%20%26%20Teachers"
+    class="advice-specialty-card"
+>
+
+    <span class="advice-specialty-icon">
+        🎓
+    </span>
+
+    <h3>
+        School & Teachers
+    </h3>
+
+    <p>
+        Learn from teachers, tutors, educators,
+        and experienced academic professionals.
+    </p>
+
+    <span class="advice-card-link">
+        Explore experts →
+    </span>
+
+</a>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURED EXPERTS -->
+    <section class="advice-section">
+
+        <div class="advice-section-heading advice-featured-heading">
+
+            <div>
+
+                <span class="panel-label">
+                    FEATURED EXPERTS
+                </span>
+
+                <h2>
+                    People worth talking to.
+                </h2>
+
+            </div>
+
+            <a
+                href="{{ url_for('advice.advisors') }}"
+                class="advice-view-all"
+            >
+                View all experts →
+            </a>
+
+        </div>
+
+
+        {% if advisors %}
+
+            <div class="advice-advisor-grid">
+
+                {% for advisor in advisors[:6] %}
+
+                    <article class="advice-advisor-card">
+
+                        <div class="advice-advisor-top">
+
+                            {% if advisor.profile_image %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        filename='uploads/' ~ advisor.profile_image
+                                    ) }}"
+                                    alt="{{ advisor.name }}"
+                                    class="advice-advisor-image"
+                                >
+
+                            {% else %}
+
+                                <div class="advice-advisor-placeholder">
+                                    {{ advisor.name[:1]|upper }}
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if advisor.is_verified %}
+
+                                <span class="advice-verified">
+                                    ✓ Verified
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="advice-advisor-info">
+
+                            <h3>
+                                {{ advisor.name }}
+                            </h3>
+
+
+                            {% if advisor.headline %}
+
+                                <p class="advice-advisor-headline">
+                                    {{ advisor.headline }}
+                                </p>
+
+                            {% endif %}
+
+
+                            <div class="advice-advisor-meta">
+
+                                <span>
+                                    {{ advisor.category }}
+                                </span>
+
+                                <span>
+                                    {{ advisor.department }}
+                                </span>
+
+                            </div>
+
+
+                            <p class="advice-advisor-expertise">
+                                {{ advisor.expertise }}
+                            </p>
+
+
+                            <div class="advice-advisor-bottom">
+
+                                <div class="advice-rating">
+
+                                    ★
+
+                                    {% if advisor.rating %}
+
+                                        {{ "%.1f"|format(advisor.rating) }}
+
+                                    {% else %}
+
+                                        New
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="advice-rate">
+
+                                    <strong>
+                                        {{ advisor.rate_per_minute }}
+                                    </strong>
+
+                                    <span>
+                                        / min
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                href="{{ url_for(
+                                    'advice.advisor_profile',
+                                    advisor_id=advisor.id
+                                ) }}"
+                                class="advice-profile-btn"
+                            >
+                                View Profile
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="advice-empty">
+
+                <div class="advice-empty-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    Experts are coming soon.
+                </h3>
+
+                <p>
+                    Be one of the first professionals
+                    to offer advice on OnlyAdvice.
+                </p>
+
+
+                {% if current_user %}
+
+                    <a
+                        href="{{ url_for('advice.become_advisor') }}"
+                        class="nav-cta"
+                    >
+                        Become an Advisor
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{{ url_for('auth.register') }}"
+                        class="nav-cta"
+                    >
+                        Join OnlyEarn
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- HOW IT WORKS -->
+    <section class="advice-section">
+
+        <div class="advice-section-heading">
+
+            <span class="panel-label">
+                HOW ONLYADVICE WORKS
+            </span>
+
+            <h2>
+                Expertise with clear rates.
+            </h2>
+
+        </div>
+
+
+        <div class="advice-how-grid">
+
+            <div class="advice-how-card">
+
+                <span class="advice-step">
+                    01
+                </span>
+
+                <h3>
+                    Find your expert
+                </h3>
+
+                <p>
+                    Search professionals by category,
+                    department, and expertise.
+                </p>
+
+            </div>
+
+
+            <div class="advice-how-card">
+
+                <span class="advice-step">
+                    02
+                </span>
+
+                <h3>
+                    See the rate
+                </h3>
+
+                <p>
+                    Advisors set their own transparent
+                    per-minute consultation rates.
+                </p>
+
+            </div>
+
+
+            <div class="advice-how-card">
+
+                <span class="advice-step">
+                    03
+                </span>
+
+                <h3>
+                    Connect
+                </h3>
+
+                <p>
+                    Message an expert or book a
+                    consultation when you need them.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ADVISOR CTA -->
+    <section class="advice-section">
+
+        <div>
+
+            <span class="panel-label">
+                HAVE EXPERTISE?
+            </span>
+
+            <h2>
+                Turn your knowledge
+                into income.
+            </h2>
+
+            <p>
+                Create your OnlyAdvice profile, choose
+                your rate, and start connecting with
+                people who need your expertise.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            {% if current_user %}
+
+                <a
+                    href="{{ url_for('advice.become_advisor') }}"
+                    class="nav-cta"
+                >
+                    Become an Advisor
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{{ url_for('auth.register') }}"
+                    class="nav-cta"
+                >
+                    Join OnlyEarn
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

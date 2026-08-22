@@ -339,8 +339,8 @@ def login():
 
 
             return redirect(
-                url_for("dashboard")
-            )
+                 url_for("dashboard.dashboard")
+                )
 
 
         flash(

@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ advisor.name }} · OnlyAdvice
+{% endblock %}
+
+{% block content %}
+
+<div class="advice-profile-page">
+
+    <!-- PROFILE HEADER -->
+
+    <section class="advice-profile-header">
+
+        <div class="advice-profile-avatar">
+
+            {% if advisor.profile_image %}
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='uploads/' ~ advisor.profile_image
+                    ) }}"
+                    alt="{{ advisor.name }}"
+                >
+
+            {% else %}
+
+                <div class="advice-profile-placeholder">
+                    {{ advisor.name[:1]|upper }}
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="advice-profile-header-info">
+
+            <div class="advice-profile-label">
+                ONLYADVICE
+            </div>
+
+            <h1>
+                {{ advisor.name }}
+            </h1>
+
+            {% if advisor.headline %}
+
+                <p class="advice-profile-headline">
+                    {{ advisor.headline }}
+                </p>
+
+            {% endif %}
+
+            {% if advisor.location %}
+
+                <p class="advice-profile-location">
+                    {{ advisor.location }}
+                </p>
+
+            {% endif %}
+
+            {% if advisor.is_verified %}
+
+                <span class="advice-verified">
+                    ✓ Verified Advisor
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ADVISOR INFORMATION -->
+
+    <div class="advice-profile-grid">
+
+        <main>
+
+
+            <!-- ABOUT -->
+
+            <section class="advice-profile-section">
+
+                <span class="panel-label">
+                    ABOUT
+                </span>
+
+                <h2>
+                    About {{ advisor.name.split(' ')[0] }}
+                </h2>
+
+                <p>
+                    {{ advisor.user_bio or
+                    'This advisor has not added a biography yet.' }}
+                </p>
+
+            </section>
+
+
+            <!-- EXPERTISE -->
+
+            <section class="advice-profile-section">
+
+                <span class="panel-label">
+                    EXPERTISE
+                </span>
+
+                <h2>
+                    What I can help with
+                </h2>
+
+                <p>
+                    {{ advisor.expertise }}
+                </p>
+
+            </section>
+
+
+            <!-- PROFESSIONAL PROFILE -->
+
+            <section class="advice-profile-section">
+
+                <span class="panel-label">
+                    PROFESSIONAL PROFILE
+                </span>
+
+                <h2>
+                    {{ advisor.department }}
+                </h2>
+
+                <p>
+                    {{ advisor.category }}
+                </p>
+
+            </section>
+
+
+            <!-- PORTFOLIO LINK -->
+
+            {% if advisor.portfolio_url %}
+
+                <section class="advice-profile-section">
+
+                    <span class="panel-label">
+                        PORTFOLIO
+                    </span>
+
+                    <h2>
+                        Previous work
+                    </h2>
+
+                    <a
+                        href="{{ advisor.portfolio_url }}"
+                        target="_blank"
+                        rel="noopener"
+                        class="advice-profile-link"
+                    >
+                        View portfolio →
+                    </a>
+
+                </section>
+
+            {% endif %}
+
+
+        </main>
+
+
+        <!-- RIGHT SIDEBAR -->
+
+        <aside>
+
+
+            <!-- RATE -->
+
+            <section class="advice-profile-rate">
+
+                <span class="panel-label">
+                    CONSULTATION
+                </span>
+
+                <div class="advice-profile-price">
+
+                    <strong>
+                        {{ advisor.rate_per_minute }}
+                    </strong>
+
+                    <span>
+                        / minute
+                    </span>
+
+                </div>
+
+
+                {% if advisor.availability %}
+
+                    <p>
+                        <strong>
+                            Availability
+                        </strong>
+                        <br>
+                        {{ advisor.availability }}
+                    </p>
+
+                {% endif %}
+
+
+                <button
+                    type="button"
+                    class="nav-cta advice-book-btn"
+                >
+                    Book Consultation
+                </button>
+
+            </section>
+
+
+            <!-- RATING -->
+
+            <section class="advice-profile-side-card">
+
+                <span class="panel-label">
+                    RATING
+                </span>
+
+                <div class="advice-profile-rating">
+
+                    ★
+
+                    {% if advisor.rating %}
+
+                        {{ "%.1f"|format(advisor.rating) }}
+
+                    {% else %}
+
+                        New Advisor
+
+                    {% endif %}
+
+                </div>
+
+                <p>
+                    {{ advisor.total_reviews or 0 }}
+                    reviews
+                </p>
+
+            </section>
+
+
+            <!-- CONTACT -->
+
+            <section class="advice-profile-side-card">
+
+                <span class="panel-label">
+                    PROFILE
+                </span>
+
+                {% if advisor.website %}
+
+                    <a
+                        href="{{ advisor.website }}"
+                        target="_blank"
+                        rel="noopener"
+                        class="advice-profile-link"
+                    >
+                        Website →
+                    </a>
+
+                {% endif %}
+
+                {% if advisor.linkedin %}
+
+                    <a
+                        href="{{ advisor.linkedin }}"
+                        target="_blank"
+                        rel="noopener"
+                        class="advice-profile-link"
+                    >
+                        LinkedIn →
+                    </a>
+
+                {% endif %}
+
+            </section>
+
+        </aside>
+
+    </div>
+
+
+    {% if own_profile %}
+
+        <section class="advice-owner-actions">
+
+            <a
+                href="{{ url_for('advice.become_advisor') }}"
+                class="nav-cta"
+            >
+                Edit Advisor Profile
+            </a>
+
+            <a
+                href="{{ url_for('profile.profile') }}"
+                class="advice-secondary-btn"
+            >
+                Edit Main Profile
+            </a>
+
+        </section>
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}

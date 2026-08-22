@@ -1,0 +1,509 @@
+/* =========================================================
+   ONLYEARN — GEN Z DASHBOARD
+   ========================================================= */
+
+.dashboard {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 28px 0 100px;
+}
+
+
+/* =========================================================
+   WELCOME
+   ========================================================= */
+
+.dashboard-welcome {
+    position: relative;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 34px;
+    padding: 52px;
+    margin-bottom: 55px;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(0,255,136,.18), transparent 30%),
+        radial-gradient(circle at 85% 80%, rgba(92,92,255,.18), transparent 32%),
+        rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.09);
+    box-shadow:
+        0 30px 90px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.06);
+    animation: dashboardZoomOut 1s cubic-bezier(.16,1,.3,1);
+}
+
+.welcome-content {
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+}
+
+.dashboard-eyebrow {
+    display: inline-block;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #00ff88;
+    margin-bottom: 12px;
+}
+
+.dashboard-welcome h1 {
+    margin: 0;
+    font-size: clamp(2.8rem, 7vw, 5.8rem);
+    line-height: .95;
+    letter-spacing: -.06em;
+    font-weight: 900;
+}
+
+.dashboard-welcome h1 span {
+    color: #00ff88;
+    text-shadow: 0 0 30px rgba(0,255,136,.3);
+}
+
+.welcome-subtitle {
+    margin: 22px 0 0;
+    max-width: 570px;
+    color: rgba(255,255,255,.58);
+    font-size: 1.05rem;
+}
+
+.welcome-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+}
+
+.glow-one {
+    width: 280px;
+    height: 280px;
+    right: 8%;
+    top: -90px;
+    background: rgba(0,255,136,.12);
+}
+
+.glow-two {
+    width: 220px;
+    height: 220px;
+    right: 28%;
+    bottom: -120px;
+    background: rgba(87,76,255,.12);
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.section-heading h2 {
+    margin: 4px 0 0;
+    font-size: 1.7rem;
+    letter-spacing: -.035em;
+}
+
+.swipe-hint,
+.transaction-count,
+.privacy-pill {
+    color: rgba(255,255,255,.4);
+    font-size: .78rem;
+}
+
+
+/* =========================================================
+   EXPERIENCE CARDS
+   ========================================================= */
+
+.dashboard-experience {
+    margin-bottom: 65px;
+}
+
+.experience-track {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 12px 5px 28px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+.experience-track::-webkit-scrollbar {
+    display: none;
+}
+
+.experience-card {
+    position: relative;
+    flex: 0 0 270px;
+    min-height: 315px;
+    padding: 25px;
+    border-radius: 28px;
+    color: inherit;
+    text-decoration: none;
+    overflow: hidden;
+    scroll-snap-align: start;
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.035);
+    box-shadow: 0 18px 50px rgba(0,0,0,.2);
+    transition:
+        transform .35s cubic-bezier(.16,1,.3,1),
+        border-color .35s ease,
+        box-shadow .35s ease;
+}
+
+.experience-card::after {
+    content: "";
+    position: absolute;
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    right: -70px;
+    bottom: -70px;
+    background: rgba(0,255,136,.09);
+    filter: blur(25px);
+    transition: transform .4s ease;
+}
+
+.experience-card:hover {
+    transform: translateY(-10px) rotate(-1deg);
+    border-color: rgba(0,255,136,.3);
+    box-shadow:
+        0 28px 70px rgba(0,0,0,.32),
+        0 0 35px rgba(0,255,136,.06);
+}
+
+.experience-card:hover::after {
+    transform: scale(1.5);
+}
+
+.experience-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.experience-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background: rgba(255,255,255,.07);
+    font-size: 1.25rem;
+}
+
+.experience-arrow {
+    color: rgba(255,255,255,.35);
+    font-size: 1.2rem;
+}
+
+.experience-number {
+    margin-top: 48px;
+    font-size: 3.3rem;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: -.07em;
+}
+
+.experience-card h3 {
+    margin: 15px 0 7px;
+    font-size: 1.35rem;
+}
+
+.experience-card p {
+    margin: 0;
+    color: rgba(255,255,255,.48);
+    font-size: .88rem;
+    line-height: 1.55;
+}
+
+.experience-meta {
+    position: absolute;
+    left: 25px;
+    bottom: 23px;
+    color: #00ff88;
+    font-size: .72rem;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   EARNINGS
+   ========================================================= */
+
+.earnings-section {
+    margin-bottom: 65px;
+}
+
+.earnings-orbit {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.earning-card {
+    position: relative;
+    min-height: 185px;
+    padding: 22px;
+    border-radius: 25px;
+    background: linear-gradient(
+        145deg,
+        rgba(255,255,255,.055),
+        rgba(255,255,255,.018)
+    );
+    border: 1px solid rgba(255,255,255,.08);
+    transition: transform .3s ease, border-color .3s ease;
+}
+
+.earning-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0,255,136,.25);
+}
+
+.earning-card-top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.earning-icon {
+    font-size: 1.1rem;
+    color: #00ff88;
+}
+
+.earning-toggle,
+.transaction-toggle {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    opacity: .55;
+    transition: opacity .2s ease;
+}
+
+.earning-toggle:hover,
+.transaction-toggle:hover {
+    opacity: 1;
+}
+
+.earning-label {
+    display: block;
+    margin-top: 30px;
+    color: rgba(255,255,255,.45);
+    font-size: .78rem;
+}
+
+.earning-value {
+    display: block;
+    margin-top: 7px;
+    font-size: 1.9rem;
+    font-weight: 850;
+    letter-spacing: -.05em;
+}
+
+.custom-date-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 12px;
+}
+
+.custom-date-row input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 9px;
+    padding: 7px;
+    background: rgba(255,255,255,.04);
+    color: inherit;
+    font-size: .67rem;
+}
+
+.custom-earnings-button {
+    margin-top: 10px;
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    padding: 8px;
+    background: #00ff88;
+    color: #06130d;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   TRANSACTIONS
+   ========================================================= */
+
+.transactions-section {
+    margin-bottom: 50px;
+}
+
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.transaction {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    align-items: center;
+    gap: 15px;
+    padding: 16px 19px;
+    border-radius: 19px;
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.055);
+    transition: background .25s ease, transform .25s ease;
+}
+
+.transaction:hover {
+    background: rgba(255,255,255,.045);
+    transform: translateX(4px);
+}
+
+.transaction-symbol {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: rgba(0,255,136,.09);
+    color: #00ff88;
+}
+
+.transaction-info strong {
+    display: block;
+    font-size: .9rem;
+}
+
+.transaction-info span {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255,255,255,.38);
+    font-size: .72rem;
+}
+
+.transaction-amount {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: right;
+}
+
+.transaction-value {
+    font-size: .9rem;
+}
+
+.transaction-status {
+    display: block;
+    color: #00ff88;
+    font-size: .65rem;
+}
+
+.empty-transactions {
+    padding: 60px 20px;
+    text-align: center;
+    border: 1px dashed rgba(255,255,255,.1);
+    border-radius: 25px;
+}
+
+.empty-transactions span {
+    font-size: 2rem;
+    color: #00ff88;
+}
+
+.empty-transactions h3 {
+    margin: 14px 0 5px;
+}
+
+.empty-transactions p {
+    margin: 0;
+    color: rgba(255,255,255,.4);
+    font-size: .85rem;
+}
+
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+@keyframes dashboardZoomOut {
+
+    from {
+        opacity: 0;
+        transform: scale(1.08);
+        filter: blur(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .earnings-orbit {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .dashboard {
+        width: min(100% - 20px, 1180px);
+        padding-top: 15px;
+    }
+
+    .dashboard-welcome {
+        min-height: 260px;
+        padding: 30px 25px;
+        border-radius: 26px;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 3rem;
+    }
+
+    .section-heading {
+        align-items: start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .experience-card {
+        flex-basis: 245px;
+        min-height: 290px;
+    }
+
+    .earnings-orbit {
+        grid-template-columns: 1fr;
+    }
+
+    .transaction {
+        grid-template-columns: 42px 1fr;
+    }
+
+    .transaction-amount {
+        grid-column: 2;
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+}

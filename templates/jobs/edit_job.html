@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Job - OnlyEarn
+{% endblock %}
+
+{% block content %}
+
+<section class="work-header">
+
+    <div>
+
+        <p class="eyebrow">
+            ONLYWORK
+        </p>
+
+        <h1>
+            Edit Job Posting
+        </h1>
+
+        <p class="work-intro">
+            Update your job details. Changes will be marked
+            as an update on the original posting.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="work-edit-container">
+
+    <div class="work-edit-card">
+
+        <form
+            method="post"
+            action="{{ url_for('jobs.edit_job', job_id=job.id) }}"
+        >
+
+            <div class="work-form-group">
+
+                <label for="title">
+                    Job Position
+                </label>
+
+                <input
+                    id="title"
+                    type="text"
+                    name="title"
+                    value="{{ job.title }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="work-form-group">
+
+                <label for="description">
+                    Job Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="8"
+                    required
+                >{{ job.description }}</textarea>
+
+            </div>
+
+
+            <div class="work-form-group">
+
+                <label for="budget">
+                    Project Budget / Hourly Rate
+                </label>
+
+                <input
+                    id="budget"
+                    type="text"
+                    name="budget"
+                    value="{{ job.budget }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="work-edit-actions">
+
+                <button
+                    type="submit"
+                    class="button primary"
+                >
+                    Save Changes
+                </button>
+
+
+                <a
+                    href="{{ url_for('jobs.jobs') }}"
+                    class="button ghost"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

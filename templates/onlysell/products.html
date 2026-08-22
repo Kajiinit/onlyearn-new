@@ -1,47 +1,358 @@
 {% extends "base.html" %}
 {% block title %}OnlySell - OnlyEarn{% endblock %}
+
 {% block content %}
-<section class="page-head">
-    <div>
-        <p class="eyebrow">OnlySell</p>
-        <h1>Product marketplace</h1>
+
+<section class="onlysell-page">
+
+```
+<!-- =====================================================
+     SHOPPING HEADER
+     ===================================================== -->
+
+<section class="onlysell-header">
+
+    <div class="onlysell-heading">
+
+        <div>
+            <p class="eyebrow">ONLYSELL</p>
+
+            <h1>
+                Shop everything.<br>
+                <span>Earn differently.</span>
+            </h1>
+
+            <p class="onlysell-subtitle">
+                Discover products from independent sellers on OnlyEarn.
+            </p>
+        </div>
+
+        {% if current_user %}
+            <a
+                class="button primary onlysell-sell-button"
+                href="{{ url_for('products.create_product') }}"
+            >
+                + Sell a product
+            </a>
+        {% endif %}
+
     </div>
-    {% if current_user %}
-        <a class="button primary" href="{{ url_for('products.create_product') }}">Create listing</a>
-    {% endif %}
+
+
+    <!-- SEARCH -->
+
+    <form
+        class="onlysell-search"
+        method="get"
+        action="{{ url_for('products.products') }}"
+    >
+
+        <span class="search-icon">⌕</span>
+
+        <input
+            type="search"
+            name="q"
+            placeholder="Search products, brands and categories..."
+            value="{{ request.args.get('q', '') }}"
+        >
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
 </section>
 
-<section class="product-grid">
-    {% for product in products %}
-        <article class="product-card">
-            <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
-                <div class="product-image">
-                    {% if product.image %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="{{ product.title }}">
-                    {% else %}
-                        <span>No image</span>
-                    {% endif %}
-                </div>
-                <div class="product-body">
-                    <p class="tag">{{ product.category }}</p>
-                    <h2>{{ product.title }}</h2>
-                    <p class="price">${{ product.price }}</p>
-                    <p class="muted">Seller: {{ product.seller_name }}</p>
-                    {% if product.allow_negotiation %}
-                        <p class="status">Negotiable</p>
-                    {% endif %}
-                </div>
-            </a>
-            <form class="product-actions" method="post" action="{{ url_for('cart.add_to_cart', product_id=product.id) }}">
-                <input type="hidden" name="quantity" value="1">
-                <button class="button primary" type="submit">Add to cart</button>
-            </form>
-        </article>
-    {% else %}
-        <div class="empty-state">
-            <h2>No products yet</h2>
-            <p>Create the first OnlySell listing.</p>
-        </div>
-    {% endfor %}
+
+<!-- =====================================================
+     CATEGORY BAR
+     ===================================================== -->
+<section class="onlysell-categories">
+
+    <a
+        href="{{ url_for('products.products') }}"
+        class="onlysell-category {% if not category %}active{% endif %}"
+    >
+        <span class="category-icon">◉</span>
+        <strong>All</strong>
+    </a>
+
+    <a
+        href="{{ url_for('products.products', category='Electronics') }}"
+        class="onlysell-category {% if category == 'Electronics' %}active{% endif %}"
+    >
+        <span class="category-icon">▣</span>
+        <strong>Electronics</strong>
+    </a>
+
+    <a
+        href="{{ url_for('products.products', category='Fashion') }}"
+        class="onlysell-category {% if category == 'Fashion' %}active{% endif %}"
+    >
+        <span class="category-icon">◇</span>
+        <strong>Fashion</strong>
+    </a>
+
+    <a
+        href="{{ url_for('products.products', category='Beauty') }}"
+        class="onlysell-category {% if category == 'Beauty' %}active{% endif %}"
+    >
+        <span class="category-icon">✦</span>
+        <strong>Beauty</strong>
+    </a>
+
+    <a
+        href="{{ url_for('products.products', category='Home') }}"
+        class="onlysell-category {% if category == 'Home' %}active{% endif %}"
+    >
+        <span class="category-icon">⌂</span>
+        <strong>Home</strong>
+    </a>
+
+    <a
+        href="{{ url_for('products.products', category='Gaming') }}"
+        class="onlysell-category {% if category == 'Gaming' %}active{% endif %}"
+    >
+        <span class="category-icon">◈</span>
+        <strong>Gaming</strong>
+    </a>
+
+    <a
+        href="{{ url_for('products.products', category='Books') }}"
+        class="onlysell-category {% if category == 'Books' %}active{% endif %}"
+    >
+        <span class="category-icon">▤</span>
+        <strong>Books</strong>
+    </a>
+
+    <a
+        href="{{ url_for('products.products', category='Food & Beverage') }}"
+        class="onlysell-category {% if category == 'Food & Beverage' %}active{% endif %}"
+    >
+        <span class="category-icon">♨</span>
+        <strong>Food &amp; Beverage</strong>
+    </a>
+
+    <a
+        href="{{ url_for('products.products', category='Other') }}"
+        class="onlysell-category {% if category == 'Other' %}active{% endif %}"
+    >
+        <span class="category-icon">+</span>
+        <strong>Other</strong>
+    </a>
+
 </section>
+
+<!-- =====================================================
+     SHOPPING TOOLBAR
+     ===================================================== -->
+
+<section class="onlysell-toolbar">
+
+    <div>
+        <p class="eyebrow">MARKETPLACE</p>
+        <h2>Featured products</h2>
+    </div>
+
+    <div class="onlysell-toolbar-actions">
+
+        <button
+            type="button"
+            class="onlysell-filter"
+        >
+            ☷ Filter
+        </button>
+
+        <select
+            class="onlysell-sort"
+            name="sort"
+            onchange="if(this.value) window.location.href=this.value;"
+        >
+            <option value="">Sort: Featured</option>
+
+           <option value="{{ url_for('products.products', category=category, q=search, sort='price_low') }}">
+    Price: Low to High
+</option>
+
+<option value="{{ url_for('products.products', category=category, q=search, sort='price_high') }}">
+    Price: High to Low
+</option>
+
+<option value="{{ url_for('products.products', category=category, q=search, sort='newest') }}">
+    Newest
+</option>
+        </select>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PRODUCTS
+     ===================================================== -->
+
+<section class="product-grid onlysell-product-grid">
+
+    {% for product in products %}
+
+        <article class="product-card onlysell-product-card">
+
+            <!-- PRODUCT IMAGE -->
+
+            <a
+                class="onlysell-product-link"
+                href="{{ url_for('products.product_detail', product_id=product.id) }}"
+            >
+
+                <div class="product-image onlysell-product-image">
+
+                    {% if product.image %}
+
+                        <img
+                            src="{{ url_for('static', filename='uploads/' ~ product.image) }}"
+                            alt="{{ product.title }}"
+                        >
+
+                    {% else %}
+
+                        <div class="onlysell-placeholder">
+                            <span>◎</span>
+                            <small>OnlySell</small>
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if product.allow_negotiation %}
+
+                        <span class="onlysell-badge">
+                            Negotiable
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- PRODUCT INFORMATION -->
+
+                <div class="product-body onlysell-product-body">
+
+                    <p class="tag onlysell-category-label">
+                        {{ product.category }}
+                    </p>
+
+                    <h2>
+                        {{ product.title }}
+                    </h2>
+
+                    <div class="onlysell-rating">
+
+                        <span>★★★★★</span>
+
+                        <small>
+                            New
+                        </small>
+
+                    </div>
+
+
+                    <div class="onlysell-price-row">
+
+                        <p class="price">
+                            ${{ product.price }}
+                        </p>
+
+                    </div>
+
+
+                    <p class="muted onlysell-seller">
+
+                        Sold by
+                        <strong>
+                            {{ product.seller_name }}
+                        </strong>
+
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- CART ACTION -->
+
+            {% if not current_user or current_user.id != product.seller %}
+
+                <form
+                    class="product-actions onlysell-product-actions"
+                    method="post"
+                    action="{{ url_for('cart.add_to_cart', product_id=product.id) }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="quantity"
+                        value="1"
+                    >
+
+                    <button
+                        class="button primary onlysell-cart-button"
+                        type="submit"
+                    >
+                        Add to cart
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+        </article>
+
+    {% else %}
+
+        <!-- =================================================
+             EMPTY MARKETPLACE
+             ================================================= -->
+
+        <div class="empty-state onlysell-empty">
+
+            <div class="onlysell-empty-icon">
+                ◎
+            </div>
+
+            <p class="eyebrow">
+                ONLYSELL
+            </p>
+
+            <h2>
+                No products yet
+            </h2>
+
+            <p>
+                Be the first seller to create an OnlySell listing.
+            </p>
+
+            {% if current_user %}
+
+                <a
+                    class="button primary"
+                    href="{{ url_for('products.create_product') }}"
+                >
+                    Create the first listing
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+</section>
+```
+
+</section>
+
 {% endblock %}

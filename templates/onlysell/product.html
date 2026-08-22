@@ -14,7 +14,7 @@
         <h1>{{ product.title }}</h1>
         <p class="price large">${{ product.price }}</p>
         <p>{{ product.description }}</p>
-        <form class="buy-box" method="post" action="{{ url_for('add_to_cart', product_id=product.id) }}">
+        <form class="buy-box" method="post" action="{{ url_for('cart.add_to_cart', product_id=product.id) }}">
             <label>Quantity
                 <input type="number" name="quantity" value="1" min="1">
             </label>

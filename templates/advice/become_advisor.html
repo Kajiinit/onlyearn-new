@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}
+Become an Advisor · OnlyAdvice
+{% endblock %}
+
+{% block content %}
+
+<section class="advice-form-page">
+
+    <div class="advice-form-container">
+
+        <div class="advice-form-header">
+
+            <span class="panel-label">
+                ONLYADVICE
+            </span>
+
+            <h1>
+                Share your expertise.
+            </h1>
+
+            <p>
+                Create your expert profile and choose
+                what you charge for your time.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="advice-form"
+        >
+
+            <div class="advice-form-group">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <select
+                    id="category"
+                    name="category"
+                    required
+                >
+
+                    <option value="">
+                        Select a category
+                    </option>
+
+                    <option
+                        value="Legal"
+                        {% if advisor and advisor.category == "Legal" %}
+                            selected
+                        {% endif %}
+                    >
+                        Legal
+                    </option>
+
+                    <option
+                        value="Real Estate"
+                        {% if advisor and advisor.category == "Real Estate" %}
+                            selected
+                        {% endif %}
+                    >
+                        Real Estate
+                    </option>
+
+                    <option
+                        value="Health"
+                        {% if advisor and advisor.category == "Health" %}
+                            selected
+                        {% endif %}
+                    >
+                        Health
+                    </option>
+
+                    <option
+                        value="Business & Creative"
+                        {% if advisor and advisor.category == "Business & Creative" %}
+                            selected
+                        {% endif %}
+                    >
+                        Business & Creative
+                    </option>
+
+                    <option
+                    value="Food & Beverage"
+                     {% if advisor and advisor.category == "Food & Beverage" %}
+                      selected
+                        {% endif %}
+>
+                        Food & Beverage
+                    </option>
+
+                     <option
+                     value="School & Teachers"
+                    {% if advisor and advisor.category == "School & Teachers" %}
+                        selected
+                     {% endif %}
+>
+                     School & Teachers
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="advice-form-group">
+
+                <label for="department">
+                    Profession / Department
+                </label>
+
+                <input
+                    type="text"
+                    id="department"
+                    name="department"
+                    placeholder="e.g. Neurosurgeon, Lawyer, CEO"
+                    value="{{ advisor.department if advisor else '' }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="advice-form-group">
+
+                <label for="expertise">
+                    Expertise
+                </label>
+
+                <input
+                    type="text"
+                    id="expertise"
+                    name="expertise"
+                    placeholder="e.g. Neurosurgery, Business Strategy"
+                    value="{{ advisor.expertise if advisor else '' }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="advice-form-group">
+
+                <label for="bio">
+                    About your expertise
+                </label>
+
+                <textarea
+                    id="bio"
+                    name="bio"
+                    rows="6"
+                    placeholder="Tell people what you can help them with..."
+                    required
+                >{{ advisor.bio if advisor else '' }}</textarea>
+
+            </div>
+
+
+            <div class="advice-form-row">
+
+                <div class="advice-form-group">
+
+                    <label for="rate_per_minute">
+                        Rate per minute
+                    </label>
+
+                    <input
+                        type="text"
+                        id="rate_per_minute"
+                        name="rate_per_minute"
+                        placeholder="e.g. AED 20"
+                        value="{{ advisor.rate_per_minute if advisor else '' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="advice-form-group">
+
+                    <label for="availability">
+                        Availability
+                    </label>
+
+                    <input
+                        type="text"
+                        id="availability"
+                        name="availability"
+                        placeholder="e.g. Mon–Fri, 6 PM–10 PM"
+                        value="{{ advisor.availability if advisor else '' }}"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="advice-form-actions">
+
+                <button
+                    type="submit"
+                    class="nav-cta"
+                >
+                    Save Advisor Profile
+                </button>
+
+                <a
+                    href="{{ url_for('advice.home') }}"
+                    class="advice-secondary-btn"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

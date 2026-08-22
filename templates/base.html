@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}OnlyEarn{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="{{ url_for('static', filename='js/theme.js') }}" defer></script>
 </head>
@@ -19,7 +20,7 @@
 
     <a href="{{ url_for('products.products') }}">OnlySell</a>
 
-    <a href="{{ url_for('pages.only_advice') }}">OnlyAdvice</a>
+    <a href="{{ url_for('advice.home') }}">OnlyAdvice</a>
 
     <a href="{{ url_for('cart.cart') }}">
         Cart{% if cart_count %} ({{ cart_count }}){% endif %}
@@ -36,6 +37,8 @@
 -->
        <a href="{{ url_for('wallet.wallet') }}">Wallet</a>
 
+       <a href="{{ url_for('profile.profile') }}">Profile</a>
+
         <a href="{{ url_for('auth.logout') }}">Logout</a>
 
     {% else %}
@@ -47,6 +50,13 @@
         </a>
 
     {% endif %}
+
+    {% if request.endpoint and request.endpoint.startswith('advice.') %}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/advice/advice.css') }}"
+    >
+{% endif %}
 
 </div>
             <button class="theme-toggle" type="button" aria-label="Toggle dark mode" data-theme-toggle>◐</button>

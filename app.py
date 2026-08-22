@@ -224,6 +224,7 @@ from routes.products import products_bp
 from routes.cart import cart_bp
 from routes.checkout import checkout_bp
 from routes.dashboard import dashboard_bp
+from routes.advice import advice_bp
 
 app.register_blueprint(pages_bp)
 app.register_blueprint(auth_bp)
@@ -235,6 +236,7 @@ app.register_blueprint(products_bp)
 app.register_blueprint(cart_bp)
 app.register_blueprint(checkout_bp)
 app.register_blueprint(dashboard_bp)
+app.register_blueprint(advice_bp)
 
 # ---------------------------------------
 # Start application

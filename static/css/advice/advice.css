@@ -1,0 +1,725 @@
+/* =========================================================
+   ONLYADVICE — MODERN ADVISOR UI
+   ========================================================= */
+
+.advice-page {
+    width: min(1180px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding: 2rem 0 5rem;
+}
+
+/* ---------------------------------------------------------
+   HERO
+   --------------------------------------------------------- */
+
+.advice-hero {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(2.5rem, 7vw, 5.5rem);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(0, 255, 136, .16),
+            transparent 32%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(0, 255, 136, .10),
+            var(--surface)
+        );
+    box-shadow: var(--shadow);
+}
+
+.advice-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 760px;
+}
+
+.advice-hero h1 {
+    margin: .5rem 0 1.2rem;
+    font-size: clamp(2.8rem, 7vw, 5.8rem);
+    line-height: .95;
+    letter-spacing: -.065em;
+}
+
+.advice-hero h1 span {
+    color: var(--primary);
+}
+
+.advice-hero p {
+    max-width: 680px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.08rem;
+    line-height: 1.75;
+}
+
+.advice-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+/* ---------------------------------------------------------
+   SECTIONS
+   --------------------------------------------------------- */
+
+.advice-section {
+    margin-top: 4rem;
+}
+
+.advice-section-heading {
+    margin-bottom: 1.5rem;
+}
+
+.advice-section-heading h2 {
+    margin: .35rem 0 .6rem;
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    line-height: 1;
+    letter-spacing: -.05em;
+}
+
+.advice-section-heading p {
+    max-width: 650px;
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.panel-label {
+    display: inline-block;
+    color: var(--primary);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------
+   SPECIALTY CARDS
+   --------------------------------------------------------- */
+
+.advice-specialties {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.advice-specialty-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 270px;
+    padding: 1.5rem;
+    overflow: hidden;
+
+    color: inherit;
+    text-decoration: none;
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        );
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.advice-specialty-card::before {
+    content: "";
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: -70px;
+    right: -70px;
+    border-radius: 50%;
+    background: rgba(0,255,136,.10);
+    filter: blur(10px);
+    pointer-events: none;
+}
+
+.advice-specialty-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0,255,136,.45);
+    box-shadow:
+        0 15px 45px rgba(0,0,0,.20),
+        0 0 25px rgba(0,255,136,.07);
+}
+
+.advice-specialty-icon {
+    position: relative;
+    z-index: 1;
+
+    display: grid;
+    place-items: center;
+
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1.25rem;
+
+    border: 1px solid rgba(0,255,136,.35);
+    border-radius: 14px;
+
+    color: #062016;
+    background: var(--primary);
+
+    font-size: 1.35rem;
+
+    box-shadow: 0 0 22px rgba(0,255,136,.14);
+}
+
+.advice-specialty-card h3 {
+    position: relative;
+    z-index: 1;
+
+    margin: 0 0 .65rem;
+    font-size: 1.25rem;
+}
+
+.advice-specialty-card p {
+    position: relative;
+    z-index: 1;
+
+    margin: 0;
+    color: var(--muted);
+    font-size: .92rem;
+    line-height: 1.65;
+}
+
+/* This keeps Explore experts at the bottom of every card */
+.advice-card-link {
+    position: relative;
+    z-index: 1;
+
+    display: inline-flex;
+    align-items: center;
+
+    margin-top: auto;
+    padding-top: 1.4rem;
+
+    color: var(--primary);
+    font-size: .86rem;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition:
+        transform .2s ease,
+        color .2s ease;
+}
+
+.advice-specialty-card:hover .advice-card-link {
+    transform: translateX(4px);
+}
+
+/* ---------------------------------------------------------
+   FEATURED EXPERTS
+   --------------------------------------------------------- */
+
+.advice-featured-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.advice-view-all {
+    color: var(--primary);
+    font-size: .9rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.advice-view-all:hover {
+    text-decoration: underline;
+}
+
+.advice-advisor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.advice-advisor-card {
+    overflow: hidden;
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    background: var(--surface);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.advice-advisor-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0,255,136,.35);
+    box-shadow: 0 15px 40px rgba(0,0,0,.18);
+}
+
+.advice-advisor-top {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 190px;
+    padding: 1.5rem;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0,255,136,.12),
+            transparent 65%
+        );
+}
+
+.advice-advisor-image,
+.advice-advisor-placeholder {
+    width: 110px;
+    height: 110px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 2px solid var(--primary);
+
+    box-shadow:
+        0 0 0 5px rgba(0,255,136,.08),
+        0 0 28px rgba(0,255,136,.18);
+}
+
+.advice-advisor-placeholder {
+    display: grid;
+    place-items: center;
+
+    color: var(--primary);
+    background: rgba(0,255,136,.08);
+
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.advice-verified {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+
+    padding: .35rem .65rem;
+
+    border: 1px solid rgba(0,255,136,.25);
+    border-radius: 999px;
+
+    color: var(--primary);
+    background: rgba(0,255,136,.08);
+
+    font-size: .7rem;
+    font-weight: 800;
+}
+
+.advice-advisor-info {
+    padding: 1.35rem;
+}
+
+.advice-advisor-info h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.advice-advisor-headline {
+    margin: .35rem 0 0;
+    color: var(--muted);
+    font-size: .85rem;
+}
+
+.advice-advisor-meta {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-top: .9rem;
+}
+
+.advice-advisor-meta span {
+    padding: .3rem .55rem;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    color: var(--muted);
+    font-size: .7rem;
+}
+
+.advice-advisor-expertise {
+    margin: 1rem 0;
+    color: var(--muted);
+    font-size: .88rem;
+    line-height: 1.6;
+}
+
+.advice-advisor-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.advice-rating {
+    color: var(--primary);
+    font-size: .85rem;
+    font-weight: 800;
+}
+
+.advice-rate {
+    text-align: right;
+}
+
+.advice-rate strong {
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+.advice-rate span {
+    color: var(--muted);
+    font-size: .75rem;
+}
+
+.advice-profile-btn {
+    display: block;
+
+    margin-top: 1rem;
+    padding: .75rem 1rem;
+
+    border: 1px solid rgba(0,255,136,.3);
+    border-radius: 12px;
+
+    color: var(--primary);
+    background: rgba(0,255,136,.06);
+
+    text-align: center;
+    text-decoration: none;
+    font-size: .85rem;
+    font-weight: 800;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease;
+}
+
+.advice-profile-btn:hover {
+    background: rgba(0,255,136,.12);
+    border-color: rgba(0,255,136,.55);
+}
+
+/* ---------------------------------------------------------
+   EMPTY STATE
+   --------------------------------------------------------- */
+
+.advice-empty {
+    padding: 3rem 1.5rem;
+
+    border: 1px dashed var(--border);
+    border-radius: 20px;
+
+    text-align: center;
+}
+
+.advice-empty-icon {
+    margin-bottom: .8rem;
+    color: var(--primary);
+    font-size: 2rem;
+}
+
+.advice-empty h3 {
+    margin: 0 0 .5rem;
+}
+
+.advice-empty p {
+    max-width: 500px;
+    margin: 0 auto 1.3rem;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+/* ---------------------------------------------------------
+   HOW IT WORKS
+   --------------------------------------------------------- */
+
+.advice-how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.advice-how-card {
+    padding: 1.5rem;
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    background: var(--surface);
+}
+
+.advice-step {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+
+    color: var(--primary);
+    font-size: .75rem;
+    font-weight: 900;
+    letter-spacing: .12em;
+}
+
+.advice-how-card h3 {
+    margin: 0 0 .65rem;
+}
+
+.advice-how-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+/* ---------------------------------------------------------
+   FINAL CTA
+   --------------------------------------------------------- */
+
+.advice-final-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+
+    margin-top: 4rem;
+    padding: 2rem;
+
+    border: 1px solid rgba(0,255,136,.25);
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,255,136,.10),
+            var(--surface)
+        );
+}
+
+.advice-final-cta h2 {
+    margin: .4rem 0 .7rem;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1;
+    letter-spacing: -.04em;
+}
+
+.advice-final-cta p {
+    max-width: 650px;
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+/* ---------------------------------------------------------
+   ADVICE FORM
+   --------------------------------------------------------- */
+
+.advice-form-container {
+    width: min(760px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding: 3rem 0 5rem;
+}
+
+.advice-form-header {
+    margin-bottom: 2rem;
+}
+
+.advice-form-header h1 {
+    margin: .5rem 0 .7rem;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    letter-spacing: -.055em;
+}
+
+.advice-form-header p {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.advice-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    padding: 1.5rem;
+
+    border: 1px solid var(--border);
+    border-radius: 22px;
+
+    background: var(--surface);
+}
+
+.advice-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.advice-form-group label {
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+.advice-form-group input,
+.advice-form-group select,
+.advice-form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: .85rem 1rem;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    color: inherit;
+    background: rgba(255,255,255,.025);
+
+    font: inherit;
+
+    outline: none;
+}
+
+.advice-form-group input:focus,
+.advice-form-group select:focus,
+.advice-form-group textarea:focus {
+    border-color: rgba(0,255,136,.55);
+    box-shadow: 0 0 0 3px rgba(0,255,136,.07);
+}
+
+.advice-form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.advice-form-actions {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    flex-wrap: wrap;
+
+    padding-top: .5rem;
+}
+
+/* ---------------------------------------------------------
+   RESPONSIVE
+   --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+
+    .advice-specialties {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .advice-advisor-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .advice-how-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .advice-page {
+        width: min(100% - 1rem, 1180px);
+        padding-top: 1rem;
+    }
+
+    .advice-hero {
+        padding: 2rem 1.25rem;
+        border-radius: 20px;
+    }
+
+    .advice-specialties,
+    .advice-advisor-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .advice-featured-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .advice-form-container {
+        width: min(100% - 1rem, 760px);
+        padding-top: 1.5rem;
+    }
+
+    .advice-form {
+        padding: 1rem;
+    }
+
+    .advice-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .advice-final-cta {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+}
+
+/* FIX: Explore experts link was being styled as an icon */
+.advice-specialties .advice-card-link {
+    display: inline-flex;
+    width: auto;
+    height: auto;
+    min-height: 0;
+
+    margin-top: auto;
+    margin-bottom: 0;
+
+    padding: 1.4rem 0 0;
+
+    border: 0;
+    border-radius: 0;
+
+    color: var(--primary);
+    background: transparent;
+
+    font-size: .86rem;
+    font-weight: 800;
+    line-height: 1.4;
+
+    box-shadow: none;
+}
+
+.advice-specialties .advice-specialty-icon {
+    display: grid;
+    width: 48px;
+    height: 48px;
+
+    margin-bottom: 1.25rem;
+
+    background: var(--primary);
+}

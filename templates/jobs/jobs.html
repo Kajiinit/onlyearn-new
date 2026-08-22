@@ -1,42 +1,437 @@
 {% extends "base.html" %}
-{% block title %}OnlyJobs - OnlyEarn{% endblock %}
+
+{% block title %}
+OnlyWork - OnlyEarn
+{% endblock %}
+
 {% block content %}
-<section class="page-head">
+
+<div class="work-orbit work-orbit-a" aria-hidden="true">💼</div>
+<div class="work-orbit work-orbit-b" aria-hidden="true">⌘</div>
+
+<div class="work-float work-laptop" aria-hidden="true">💻</div>
+<div class="work-float work-file" aria-hidden="true">📄</div>
+<div class="work-float work-folder" aria-hidden="true">📁</div>
+
+
+<section class="work-header">
+
     <div>
-        <p class="eyebrow">OnlyJobs</p>
-        <h1>Freelance job marketplace</h1>
+
+        <p class="eyebrow">
+            ONLYWORK
+        </p>
+
+        <h1>
+            Find freelance work.<br>
+            <em>Build your future.</em>
+        </h1>
+
+        <p class="work-intro">
+            Discover opportunities, connect with employers,
+            and grow your income through OnlyEarn's freelance marketplace.
+        </p>
+
+
+        <!-- SEARCH -->
+
+        <form
+            class="work-search"
+            method="get"
+            action="{{ url_for('jobs.jobs') }}"
+        >
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search jobs, skills, employers..."
+                value="{{ search or '' }}"
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
     </div>
+
+
     {% if current_user %}
-        <a class="button primary" href="{{ url_for('jobs.create_job') }}">Create job</a>
+
+    <a
+        class="button primary"
+        href="{{ url_for('jobs.create_job') }}"
+    >
+        Create Job
+    </a>
+
     {% endif %}
+
 </section>
 
-<section class="list-grid">
+
+
+<section class="work-list">
+
     {% for job in jobs %}
-        <article class="panel listing">
-            <div>
-                <p class="tag">${{ job.budget }}</p>
-                <h2>{{ job.title }}</h2>
-                <p>{{ job.description }}</p>
-                <p class="muted">Employer: {{ job.employer_name }}</p>
+
+    <article class="work-card">
+
+
+        <div class="work-card-top">
+
+
+            <div class="work-info">
+
+
+                <div class="work-badge">
+                    VERIFIED EMPLOYER
+                </div>
+
+
+                <h2>
+                    {{ job.title }}
+                </h2>
+
+
+                <p class="work-description">
+                    {{ job.description }}
+                </p>
+
+
+                <div class="work-employer">
+
+                    <span>
+                        Employer
+                    </span>
+
+                    <strong>
+                        {{ job.employer_name }}
+                    </strong>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="work-date">
+
+                    {% if job.created_at %}
+
+                    <span>
+                        Posted
+                    </span>
+
+                    <strong>
+                        {{ job.created_at[:10] }}
+                    </strong>
+
+                    {% endif %}
+
+
+                    {% if job.updated_at
+                          and job.created_at
+                          and job.updated_at != job.created_at %}
+
+                    <small>
+                        ✨ Updated
+                    </small>
+
+                    {% endif %}
+
+                </div>
+
+
             </div>
-            <div class="actions">
-                {% if current_user and current_user.id == job.created_by %}
-                    <a class="button ghost" href="{{ url_for('jobs.applicants', job_id=job.id) }}">Applicants</a>
-                {% elif current_user %}
-                    <form method="post" action="{{ url_for('apply_to_job', job_id=job.id) }}">
-                        <button class="button primary" type="submit">Apply</button>
-                    </form>
-                {% else %}
-                    <a class="button primary" href="{{ url_for('auth.login') }}">Login to apply</a>
-                {% endif %}
+
+
+
+            <div class="work-budget">
+
+                <span>
+                    PROJECT BUDGET
+                </span>
+
+                <strong>
+                    ${{ job.budget }}
+                </strong>
+
             </div>
-        </article>
-    {% else %}
-        <div class="empty-state">
-            <h2>No jobs yet</h2>
-            <p>Be the first employer to publish an opportunity.</p>
+
+
         </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="work-card-actions">
+
+
+            <button
+                class="work-more"
+                type="button"
+                onclick="toggleJobDetails(this)"
+            >
+
+                View Details
+
+                <span>
+                    ↓
+                </span>
+
+            </button>
+
+
+
+            {% if current_user and current_user.id == job.created_by %}
+
+
+                <a
+                    class="button ghost"
+                    href="{{ url_for('jobs.applicants', job_id=job.id) }}"
+                >
+                    Applicants
+                </a>
+
+
+                <a
+                    class="button ghost"
+                    href="{{ url_for('jobs.edit_job', job_id=job.id) }}"
+                >
+                    Edit
+                </a>
+
+
+                <form
+                    method="post"
+                    action="{{ url_for('jobs.delete_job', job_id=job.id) }}"
+                    onsubmit="return confirm('Are you sure you want to delete this job posting?');"
+                >
+
+                    <button
+                        class="button danger"
+                        type="submit"
+                    >
+                        Delete
+                    </button>
+
+                </form>
+
+
+            {% elif current_user %}
+
+
+                <form
+                    method="post"
+                    action="{{ url_for('jobs.apply_to_job', job_id=job.id) }}"
+                >
+
+                    <button
+                        class="button primary"
+                        type="submit"
+                    >
+                        Apply Now
+                    </button>
+
+                </form>
+
+
+            {% else %}
+
+
+                <a
+                    class="button primary"
+                    href="{{ url_for('auth.login') }}"
+                >
+                    Login to Apply
+                </a>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- EXPANDABLE DETAILS -->
+
+        <div
+            class="work-details"
+            hidden
+        >
+
+            <div class="work-details-inner">
+
+                <h3>
+                    About this opportunity
+                </h3>
+
+                <p>
+                    {{ job.description }}
+                </p>
+
+
+                <div class="work-detail-grid">
+
+                    <div>
+
+                        <span>
+                            Job Position
+                        </span>
+
+                        <strong>
+                            {{ job.title }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Project Budget
+                        </span>
+
+                        <strong>
+                            ${{ job.budget }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Employer
+                        </span>
+
+                        <strong>
+                            {{ job.employer_name }}
+                        </strong>
+
+                    </div>
+
+
+                    {% if job.created_at %}
+
+                    <div>
+
+                        <span>
+                            Date Posted
+                        </span>
+
+                        <strong>
+                            {{ job.created_at[:10] }}
+                        </strong>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="work-employer-note">
+
+                    <span>
+                        Employer Description
+                    </span>
+
+                    <p>
+                        {{ job.description }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </article>
+
+
+    {% else %}
+
+
+    <div class="empty-state">
+
+        {% if search %}
+
+        <h2>
+            No jobs found
+        </h2>
+
+        <p>
+            We couldn't find any jobs matching
+            "{{ search }}".
+        </p>
+
+        <a
+            class="button ghost"
+            href="{{ url_for('jobs.jobs') }}"
+        >
+            Clear Search
+        </a>
+
+        {% else %}
+
+        <h2>
+            No jobs yet
+        </h2>
+
+        <p>
+            Be the first employer to publish an opportunity.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
     {% endfor %}
+
+
 </section>
+
+
+
+<script>
+
+function toggleJobDetails(button) {
+
+    const card = button.closest(".work-card");
+
+    const details = card.querySelector(".work-details");
+
+    if (details.hidden) {
+
+        details.hidden = false;
+
+        button.classList.add("active");
+
+        button.querySelector("span").textContent = "↑";
+
+        button.childNodes[0].textContent = "Hide Details ";
+
+    } else {
+
+        details.hidden = true;
+
+        button.classList.remove("active");
+
+        button.querySelector("span").textContent = "↓";
+
+        button.childNodes[0].textContent = "View Details ";
+
+    }
+
+}
+
+</script>
+
+
 {% endblock %}

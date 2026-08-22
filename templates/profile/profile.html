@@ -1,79 +1,394 @@
 {% extends "base.html" %}
-{% block title %}{{ user.name }} · OnlyEarn{% endblock %}
+
+{% block title %}
+{{ user.name }} · OnlyEarn
+{% endblock %}
+
 {% block content %}
+
 <section class="freelancer-profile">
-    <header class="freelancer-hero">
-        <div class="profile-avatar-wrap">
-            {% if user.profile_image and user.profile_image != 'default.png' %}
-                <img src="{{ url_for('static', filename='profile/users/' + user.profile_image) }}" class="professional-avatar" alt="{{ user.name }}">
-            {% else %}
-                <span class="professional-avatar profile-initial">{{ user.name[:1].upper() }}</span>
-            {% endif %}
-        </div>
-        <div class="freelancer-identity">
-            <div class="profile-status-line">
-                <span>{{ user.profile_type|default('freelancer', true)|title }}</span>
-                {% if user.verified %}<span class="verified-badge">✓ Verified</span>{% endif %}
-            </div>
-            <h1>{{ user.name }}</h1>
-            <p class="profile-headline">{{ user.headline or 'Building a professional profile on OnlyEarn.' }}</p>
-            <div class="profile-meta">
-                {% if user.location %}<span>⌖ {{ user.location }}</span>{% endif %}
-                {% if user.email_verified %}<span>✉ Email verified</span>{% endif %}
-            </div>
-        </div>
-        <div class="profile-actions">
-            <a class="button primary" href="{{ url_for('profile.edit_profile') }}">Edit profile</a>
-            {% if not user.verified %}
-                <form method="post" action="{{ url_for('request_verification') }}">
-                    <button class="button ghost" type="submit">{% if verification %}Verification {{ verification.status }}{% else %}Request verification{% endif %}</button>
-                </form>
-            {% endif %}
-        </div>
-    </header>
 
-    <div class="professional-profile-grid">
-        <div class="profile-main-column">
-            <section class="professional-panel">
-                <p class="panel-label">ABOUT</p>
-                <h2>About {{ user.name.split(' ')[0] }}</h2>
-                <p class="profile-copy">{{ user.bio or 'Add a concise bio to introduce your experience, strengths, and the work you want to do.' }}</p>
-            </section>
+```
+<!-- PROFILE HEADER -->
+<header class="freelancer-hero">
 
-            <section class="professional-panel">
-                <p class="panel-label">EXPERIENCE</p>
-                <h2>Work experience</h2>
-                {% if experience %}
-                    <div class="timeline">
-                    {% for job in experience %}
-                        <article><span class="timeline-dot"></span><h3>{{ job.job_title }}</h3><p class="timeline-company">{{ job.company }}{% if job.location %} · {{ job.location }}{% endif %}</p><small>{{ job.start_date or 'Start date' }} — {{ job.end_date or 'Present' }}</small>{% if job.description %}<p>{{ job.description }}</p>{% endif %}</article>
-                    {% endfor %}
-                    </div>
-                {% else %}<p class="empty-profile-state">Add your work history so clients and employers can understand your background.</p>{% endif %}
-            </section>
+    <div class="profile-avatar-wrap">
 
-            <section class="professional-panel">
-                <p class="panel-label">PORTFOLIO</p>
-                <h2>Previous work</h2>
-                {% if portfolio_items %}
-                    <div class="portfolio-grid">
-                    {% for item in portfolio_items %}
-                        <a class="portfolio-item" href="{{ url_for('static', filename='uploads/' + item.file_path) }}" target="_blank" rel="noopener"><span>↗</span><h3>{{ item.title }}</h3><p>{{ item.description or 'Open portfolio file' }}</p></a>
-                    {% endfor %}
-                    </div>
-                {% else %}<p class="empty-profile-state">Upload selected projects, PDFs, imagery, or work samples from the edit page.</p>{% endif %}
-            </section>
-        </div>
+        {% if user.profile_image and user.profile_image != 'default.png' %}
 
-        <aside class="profile-side-column">
-            <section class="professional-panel contact-panel"><p class="panel-label">CONTACT</p><h2>Details</h2><dl>
-                <div><dt>Email</dt><dd><a href="mailto:{{ user.email }}">{{ user.email }}</a></dd></div>
-                {% if user.phone %}<div><dt>Phone</dt><dd><a href="tel:{{ user.phone|replace(' ', '') }}">{{ user.phone }}</a></dd></div>{% endif %}
-                {% if user.address %}<div><dt>Address</dt><dd>{{ user.address }}</dd></div>{% endif %}
-            </dl></section>
-            <section class="professional-panel"><p class="panel-label">EXPERTISE</p><h2>Skills</h2><div class="skill-pills">{% for skill in skills %}<span>{{ skill.name }}</span>{% else %}<p class="empty-profile-state">Add your skills.</p>{% endfor %}</div></section>
-            {% if education %}<section class="professional-panel"><p class="panel-label">EDUCATION</p>{% for edu in education %}<div class="education-row"><h3>{{ edu.degree }}</h3><p>{{ edu.institution }}</p><small>{{ edu.year }}</small></div>{% endfor %}</section>{% endif %}
-        </aside>
+            <img
+                src="{{ url_for('static', filename='profile/users/' + user.profile_image) }}"
+                class="professional-avatar"
+                alt="{{ user.name }}"
+            >
+
+        {% else %}
+
+            <span class="professional-avatar profile-initial">
+                {{ user.name[:1].upper() }}
+            </span>
+
+        {% endif %}
+
     </div>
+
+
+    <div class="freelancer-identity">
+
+        <div class="profile-status-line">
+
+            <span>
+                {{ user.profile_type|default('freelancer', true)|title }}
+            </span>
+
+            {% if user.verified %}
+                <span class="verified-badge">
+                    ✓ Verified
+                </span>
+            {% endif %}
+
+        </div>
+
+
+        <h1>
+            {{ user.name }}
+        </h1>
+
+
+        <p class="profile-headline">
+            {{ user.headline or 'Building a professional profile on OnlyEarn.' }}
+        </p>
+
+
+        <div class="profile-meta">
+
+            {% if user.location %}
+                <span>
+                    ⌖ {{ user.location }}
+                </span>
+            {% endif %}
+
+            {% if user.email_verified %}
+                <span>
+                    ✉ Email verified
+                </span>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-actions">
+
+        <a
+            class="button primary"
+            href="{{ url_for('profile.edit_profile') }}"
+        >
+            Edit profile
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- PROFILE CONTENT -->
+<div class="professional-profile-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="profile-main-column">
+
+
+        <!-- ABOUT -->
+        <section class="professional-panel">
+
+            <p class="panel-label">
+                ABOUT
+            </p>
+
+            <h2>
+                About {{ user.name.split(' ')[0] }}
+            </h2>
+
+            <p class="profile-copy">
+                {{ user.bio or 'Add a concise bio to introduce your experience, strengths, and the work you want to do.' }}
+            </p>
+
+        </section>
+
+
+        <!-- EXPERIENCE -->
+        <section class="professional-panel">
+
+            <p class="panel-label">
+                EXPERIENCE
+            </p>
+
+            <h2>
+                Work experience
+            </h2>
+
+
+            {% if experience %}
+
+                <div class="timeline">
+
+                    {% for job in experience %}
+
+                        <article>
+
+                            <span class="timeline-dot"></span>
+
+                            <h3>
+                                {{ job.job_title }}
+                            </h3>
+
+                            <p class="timeline-company">
+
+                                {{ job.company }}
+
+                                {% if job.location %}
+                                    · {{ job.location }}
+                                {% endif %}
+
+                            </p>
+
+                            <small>
+                                {{ job.start_date or 'Start date' }}
+                                —
+                                {{ job.end_date or 'Present' }}
+                            </small>
+
+
+                            {% if job.description %}
+
+                                <p>
+                                    {{ job.description }}
+                                </p>
+
+                            {% endif %}
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p class="empty-profile-state">
+                    Add your work history so clients and employers can understand your background.
+                </p>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- PORTFOLIO -->
+        <section class="professional-panel">
+
+            <p class="panel-label">
+                PORTFOLIO
+            </p>
+
+            <h2>
+                Previous work
+            </h2>
+
+
+            {% if portfolio_items %}
+
+                <div class="portfolio-grid">
+
+                    {% for item in portfolio_items %}
+
+                        <a
+                            class="portfolio-item"
+                            href="{{ url_for('static', filename='uploads/' + item.file_path) }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+
+                            <span>
+                                ↗
+                            </span>
+
+                            <h3>
+                                {{ item.title }}
+                            </h3>
+
+                            <p>
+                                {{ item.description or 'Open portfolio file' }}
+                            </p>
+
+                        </a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p class="empty-profile-state">
+                    Upload selected projects, PDFs, imagery, or work samples from the edit page.
+                </p>
+
+            {% endif %}
+
+        </section>
+
+    </div>
+
+
+    <!-- RIGHT COLUMN -->
+    <aside class="profile-side-column">
+
+
+        <!-- CONTACT -->
+        <section class="professional-panel contact-panel">
+
+            <p class="panel-label">
+                CONTACT
+            </p>
+
+            <h2>
+                Details
+            </h2>
+
+            <dl>
+
+                <div>
+
+                    <dt>
+                        Email
+                    </dt>
+
+                    <dd>
+
+                        <a href="mailto:{{ user.email }}">
+                            {{ user.email }}
+                        </a>
+
+                    </dd>
+
+                </div>
+
+
+                {% if user.phone %}
+
+                    <div>
+
+                        <dt>
+                            Phone
+                        </dt>
+
+                        <dd>
+
+                            <a href="tel:{{ user.phone|replace(' ', '') }}">
+                                {{ user.phone }}
+                            </a>
+
+                        </dd>
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if user.address %}
+
+                    <div>
+
+                        <dt>
+                            Address
+                        </dt>
+
+                        <dd>
+                            {{ user.address }}
+                        </dd>
+
+                    </div>
+
+                {% endif %}
+
+            </dl>
+
+        </section>
+
+
+        <!-- SKILLS -->
+        <section class="professional-panel">
+
+            <p class="panel-label">
+                EXPERTISE
+            </p>
+
+            <h2>
+                Skills
+            </h2>
+
+            <div class="skill-pills">
+
+                {% for skill in skills %}
+
+                    <span>
+                        {{ skill.name }}
+                    </span>
+
+                {% else %}
+
+                    <p class="empty-profile-state">
+                        Add your skills.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- EDUCATION -->
+        {% if education %}
+
+            <section class="professional-panel">
+
+                <p class="panel-label">
+                    EDUCATION
+                </p>
+
+
+                {% for edu in education %}
+
+                    <div class="education-row">
+
+                        <h3>
+                            {{ edu.degree }}
+                        </h3>
+
+                        <p>
+                            {{ edu.institution }}
+                        </p>
+
+                        <small>
+                            {{ edu.year }}
+                        </small>
+
+                    </div>
+
+                {% endfor %}
+
+            </section>
+
+        {% endif %}
+
+    </aside>
+
+</div>
+```
+
 </section>
+
 {% endblock %}
