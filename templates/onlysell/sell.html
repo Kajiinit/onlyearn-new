@@ -3,6 +3,7 @@
 {% block content %}
 <section class="form-page">
     <form class="panel form-panel wide" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <h1>Create product listing</h1>
         <label>Title
             <input type="text" name="title" required>

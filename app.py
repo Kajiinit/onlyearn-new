@@ -1,7 +1,6 @@
 import os
-
 from flask import Flask
-
+from flask_wtf.csrf import CSRFProtect
 from helpers import (
     current_user,
     cart_count
@@ -59,6 +58,7 @@ app.config["SECRET_KEY"] = os.environ.get(
     "change-this-secret-key"
 )
 
+csrf = CSRFProtect(app)
 app.config["DATABASE"] = DATABASE
 app.teardown_appcontext(close_db)
 

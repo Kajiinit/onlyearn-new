@@ -14,6 +14,7 @@
             <h2>Pay by card with Stripe</h2>
             {% if stripe_ready %}
                 <form class="checkout-form" method="post" action="{{ url_for('stripe_checkout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="two-col">
                         <label>Full name
                             <input type="text" name="full_name" value="{{ current_user.name }}" required>
@@ -42,6 +43,7 @@
             <p class="eyebrow">Step 3</p>
             <h2>Pay with crypto</h2>
             <form class="checkout-form" method="post" action="{{ url_for('crypto_checkout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="two-col">
                     <label>Full name
                         <input type="text" name="full_name" value="{{ current_user.name }}" required>

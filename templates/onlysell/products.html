@@ -291,6 +291,7 @@
                     method="post"
                     action="{{ url_for('cart.add_to_cart', product_id=product.id) }}"
                 >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                     <input
                         type="hidden"

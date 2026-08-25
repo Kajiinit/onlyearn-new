@@ -10,6 +10,7 @@
 
 <section class="split-layout">
     <form class="panel form-panel" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <h2>New message</h2>
         <label>Receiver
             <select name="receiver_id" required>

@@ -209,6 +209,7 @@ OnlyWork - OnlyEarn
                     action="{{ url_for('jobs.delete_job', job_id=job.id) }}"
                     onsubmit="return confirm('Are you sure you want to delete this job posting?');"
                 >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                     <button
                         class="button danger"
@@ -227,6 +228,7 @@ OnlyWork - OnlyEarn
                     method="post"
                     action="{{ url_for('jobs.apply_to_job', job_id=job.id) }}"
                 >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                     <button
                         class="button primary"

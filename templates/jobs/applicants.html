@@ -27,12 +27,15 @@
                     <td><span class="status">{{ applicant.status }}</span></td>
                     <td class="table-actions">
                         <form method="post" action="{{ url_for('update_application_status', application_id=applicant.id, status='Shortlisted') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit">Shortlist</button>
                         </form>
                         <form method="post" action="{{ url_for('update_application_status', application_id=applicant.id, status='Hired') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit">Hire</button>
                         </form>
                         <form method="post" action="{{ url_for('update_application_status', application_id=applicant.id, status='Rejected') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit">Reject</button>
                         </form>
                     </td>

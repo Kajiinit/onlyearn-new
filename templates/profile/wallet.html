@@ -783,6 +783,7 @@
                 action="{{ url_for('wallet.exchange') }}"
                 id="exchangeForm"
             >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                 <div class="exchange-field">
 

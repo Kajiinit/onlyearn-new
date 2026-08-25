@@ -36,6 +36,7 @@ Edit Job - OnlyEarn
             method="post"
             action="{{ url_for('jobs.edit_job', job_id=job.id) }}"
         >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
             <div class="work-form-group">
 

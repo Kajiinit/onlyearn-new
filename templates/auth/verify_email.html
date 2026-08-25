@@ -3,6 +3,7 @@
 {% block content %}
 <section class="form-page">
     <form class="panel form-panel otp-panel" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <h1>Verify your email</h1>
         <p class="muted">Enter the 6-digit code sent to {{ user.email }}.</p>
         <label>Verification code
@@ -14,6 +15,7 @@
             <a class="button ghost" href="{{ url_for('auth.login') }}">Back to login</a>
         </div>
     </form>
-    <form id="resend-otp" method="post" action="{{ url_for('resend_verification') }}"></form>
+    <form id="resend-otp" method="post" action="{{ url_for('resend_verification') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"></form>
 </section>
 {% endblock %}

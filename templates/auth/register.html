@@ -3,6 +3,7 @@
 {% block content %}
 <section class="form-page">
     <form class="panel form-panel" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <h1>Create account</h1>
         <label>Name
             <input type="text" name="name" required autocomplete="name">
