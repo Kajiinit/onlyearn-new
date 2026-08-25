@@ -541,7 +541,7 @@ def reset_password():
 # -------------------------
 
 
-@auth_bp.route("/logout")
+@auth_bp.route("/logout", methods=["POST"])
 def logout():
 
     session.clear()

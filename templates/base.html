@@ -40,7 +40,12 @@
 
        <a href="{{ url_for('profile.profile') }}">Profile</a>
 
-        <a href="{{ url_for('auth.logout') }}">Logout</a>
+             <form method="post" action="{{ url_for('auth.logout') }}" class="logout-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="nav-link logout-button">
+                Logout
+            </button>
+        </form>
 
     {% else %}
 
