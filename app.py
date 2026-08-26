@@ -1,16 +1,10 @@
 import os
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
-from helpers import (
-    current_user,
-    cart_count
-)
+from helpers import ( current_user, cart_count)
+from extensions import limiter
 
-from database import (
-    close_db,
-    init_db,
-    init_db_continue
-)
+from database import ( close_db, init_db, init_db_continue)
 
 # ---------------------------------------
 # Project path
@@ -52,6 +46,7 @@ app = Flask(
         "static"
     )
 )
+limiter.init_app(app)
 
 app.config["SECRET_KEY"] = os.environ.get(
     "ONLYEARN_SECRET_KEY",

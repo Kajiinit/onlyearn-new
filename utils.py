@@ -8,8 +8,6 @@ import os
 from uuid import uuid4
 from werkzeug.utils import secure_filename
 from flask import flash, current_app
-
-from flask import current_app, flash
 from werkzeug.security import generate_password_hash
 
 ALLOWED_EXTENSIONS = {

@@ -2,7 +2,7 @@ import json
 import sqlite3
 from datetime import datetime
 from uuid import uuid4
-
+from extensions import limiter
 from flask import (
     Blueprint,
     current_app,
@@ -35,6 +35,7 @@ auth_bp = Blueprint("auth", __name__)
 # -------------------------
 
 @auth_bp.route("/register", methods=["GET", "POST"])
+@limiter.limit("5 per hour", methods=["POST"])
 def register():
 
     if request.method == "POST":
@@ -130,6 +131,7 @@ def register():
 # -------------------------
 
 @auth_bp.route("/verify-email", methods=["GET", "POST"])
+@limiter.limit("5 per 15 minutes", methods=["POST"])
 def verify_email():
 
     user_id = session.get(
@@ -224,9 +226,13 @@ def verify_email():
             )
 
 
-        if check_password_hash(
-            user["verification_code"],
-            code
+        if (
+            user["verification_code"]
+            and code
+            and check_password_hash(
+                user["verification_code"],
+                code
+            )
         ):
 
             db.execute(
@@ -276,6 +282,7 @@ def verify_email():
 # -------------------------
 
 @auth_bp.route("/login", methods=["GET", "POST"])
+@limiter.limit("5 per 15 minutes", methods=["POST"])
 def login():
 
     if request.method == "POST":
@@ -358,6 +365,7 @@ def login():
 # -------------------------
 
 @auth_bp.route("/forgot-password", methods=["GET", "POST"])
+@limiter.limit("5 per 15 minutes", methods=["POST"])
 def forgot_password():
 
     if request.method == "POST":
@@ -422,6 +430,7 @@ def forgot_password():
 # -------------------------
 
 @auth_bp.route("/reset-password", methods=["GET", "POST"])
+@limiter.limit("10 per 15 minutes", methods=["POST"])
 def reset_password():
 
     email = session.get("reset_email")
@@ -435,7 +444,6 @@ def reset_password():
             url_for("auth.forgot_password")
         )
 
-
     db = get_db()
 
     user = db.execute(
@@ -447,7 +455,6 @@ def reset_password():
         (email,)
     ).fetchone()
 
-
     if not user:
         flash(
             "User not found.",
@@ -456,7 +463,6 @@ def reset_password():
         return redirect(
             url_for("auth.forgot_password")
         )
-
 
     if request.method == "POST":
 
@@ -470,36 +476,62 @@ def reset_password():
             ""
         )
 
-
-        if not check_password_hash(
-            user["password_reset_code"],
-            code
-        ):
-
+        # Password length validation
+        if len(new_password) < 8:
             flash(
-                "Invalid reset code.",
-                "danger"
+                "Password must be at least 8 characters long.",
+                "warning"
             )
-
             return render_template(
                 "auth/reset_password.html"
             )
 
+        # Make sure a reset code exists
+        if not user["password_reset_code"] or not code:
+            flash(
+                "Invalid reset code.",
+                "danger"
+            )
+            return render_template(
+                "auth/reset_password.html"
+            )
 
-        if datetime.fromisoformat(
-            user["password_reset_expires"]
-        ) < datetime.utcnow():
+        # Verify reset code
+        if not check_password_hash(
+            user["password_reset_code"],
+            code
+        ):
+            flash(
+                "Invalid reset code.",
+                "danger"
+            )
+            return render_template(
+                "auth/reset_password.html"
+            )
 
+        # Make sure expiration exists
+        if not user["password_reset_expires"]:
             flash(
                 "Reset code expired.",
                 "danger"
             )
-
             return redirect(
                 url_for("auth.forgot_password")
             )
 
+        # Check expiration
+        if datetime.fromisoformat(
+            user["password_reset_expires"]
+        ) < datetime.utcnow():
+            flash(
+                "Reset code expired.",
+                "danger"
+            )
+            return redirect(
+                url_for("auth.forgot_password")
+            )
 
+        # Update password and invalidate reset code
         db.execute(
             """
             UPDATE users
@@ -516,11 +548,11 @@ def reset_password():
 
         db.commit()
 
+        # Remove reset session
         session.pop(
             "reset_email",
             None
         )
-
 
         flash(
             "Password updated successfully. Please login.",
@@ -531,11 +563,9 @@ def reset_password():
             url_for("auth.login")
         )
 
-
     return render_template(
         "auth/reset_password.html"
     )
-
 # -------------------------
 # LOGOUT
 # -------------------------
