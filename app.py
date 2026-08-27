@@ -234,16 +234,21 @@ app.register_blueprint(dashboard_bp)
 app.register_blueprint(advice_bp)
 
 # ---------------------------------------
+# Initialize database
+# ---------------------------------------
+
+with app.app_context():
+
+    init_db()
+
+    init_db_continue()
+
+
+# ---------------------------------------
 # Start application
 # ---------------------------------------
 
 if __name__ == "__main__":
-
-    with app.app_context():
-
-        init_db()
-
-        init_db_continue()
 
     app.run(
         debug=True,
