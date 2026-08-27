@@ -275,7 +275,74 @@ def verify_email():
     user=user
 )
 
+# -------------------------
+# RESEND VERIFICATION CODE
+# -------------------------
 
+@auth_bp.route("/resend-verification", methods=["POST"])
+@limiter.limit("3 per 15 minutes")
+def resend_verification():
+
+    user_id = session.get(
+        "pending_verification_user_id"
+    )
+
+    if not user_id:
+
+        flash(
+            "Please register first.",
+            "warning"
+        )
+
+        return redirect(
+            url_for("auth.register")
+        )
+
+
+    db = get_db()
+
+    user = db.execute(
+        """
+        SELECT *
+        FROM users
+        WHERE id=?
+        """,
+        (user_id,),
+    ).fetchone()
+
+
+    if not user:
+
+        session.clear()
+
+        flash(
+            "User not found.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("auth.register")
+        )
+
+
+    if user["email_verified"]:
+
+        session.pop(
+            "pending_verification_user_id",
+            None
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+
+    issue_verification_code(user)
+
+
+    return redirect(
+        url_for("auth.verify_email")
+    )
 
 # -------------------------
 # LOGIN

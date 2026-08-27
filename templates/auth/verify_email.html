@@ -15,7 +15,7 @@
             <a class="button ghost" href="{{ url_for('auth.login') }}">Back to login</a>
         </div>
     </form>
-    <form id="resend-otp" method="post" action="{{ url_for('resend_verification') }}">
+    <form id="resend-otp" method="post" action="{{ url_for('auth.resend_verification') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"></form>
 </section>
 {% endblock %}
