@@ -233,19 +233,19 @@ app.register_blueprint(checkout_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(advice_bp)
 
+
+
 # ---------------------------------------
 # Initialize database
 # ---------------------------------------
 
 with app.app_context():
-
     init_db()
-
     init_db_continue()
 
 
 # ---------------------------------------
-# Start application
+# Local development
 # ---------------------------------------
 
 if __name__ == "__main__":
