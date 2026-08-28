@@ -51,33 +51,95 @@ def otp_expiry():
 
 def send_otp_email(email, name, code, subject, intro):
     """
-    Send OTP email using SMTP
+    Send OTP email using the Resend API.
     """
 
-    app = current_app
+    try:
+        import resend
 
-    print("\n===== SMTP DEBUG =====")
-    print("HOST:", app.config.get("SMTP_HOST"))
-    print("PORT:", app.config.get("SMTP_PORT"))
-    print("USERNAME:", app.config.get("SMTP_USERNAME"))
-    print("FROM:", app.config.get("SMTP_FROM_EMAIL"))
-    print(
-        "PASSWORD LENGTH:",
-        len(app.config.get("SMTP_PASSWORD", ""))
-    )
+        api_key = current_app.config.get("RESEND_API_KEY")
 
+        if not api_key:
+            print("RESEND_API_KEY is missing")
+            return False
 
-    smtp_host = app.config.get("SMTP_HOST")
-    smtp_port = app.config.get("SMTP_PORT")
-    smtp_username = app.config.get("SMTP_USERNAME")
-    smtp_password = app.config.get("SMTP_PASSWORD")
-    sender_email = app.config.get("SMTP_FROM_EMAIL")
+        resend.api_key = api_key
 
-    if not smtp_host or not sender_email:
-        print("SMTP configuration missing")
+        params = {
+            "from": "OnlyEarn <onboarding@resend.dev>",
+            "to": [email],
+            "subject": subject,
+            "html": f"""
+            <div style="
+                font-family: Arial, sans-serif;
+                max-width: 600px;
+                margin: 40px auto;
+                padding: 30px;
+                background: #111111;
+                color: #ffffff;
+                border-radius: 16px;
+            ">
+
+                <h1 style="
+                    color: #00ff88;
+                    margin-bottom: 25px;
+                ">
+                    OnlyEarn
+                </h1>
+
+                <p>Hi {name},</p>
+
+                <p>{intro}:</p>
+
+                <div style="
+                    text-align: center;
+                    font-size: 34px;
+                    font-weight: bold;
+                    letter-spacing: 8px;
+                    color: #00ff88;
+                    background: #1c1c1c;
+                    padding: 20px;
+                    margin: 25px 0;
+                    border-radius: 12px;
+                ">
+                    {code}
+                </div>
+
+                <p>
+                    This verification code will expire in
+                    <strong>10 minutes</strong>.
+                </p>
+
+                <p style="color: #999999;">
+                    If you did not request this code, you can safely
+                    ignore this email.
+                </p>
+
+                <hr style="
+                    border: 0;
+                    border-top: 1px solid #333333;
+                    margin: 30px 0;
+                ">
+
+                <p style="color: #777777;">
+                    OnlyEarn
+                </p>
+
+            </div>
+            """
+        }
+
+        response = resend.Emails.send(params)
+
+        print("RESEND EMAIL SENT:", response)
+
+        return True
+
+    except Exception as error:
+
+        print("RESEND ERROR:", error)
+
         return False
-
-
     try:
 
         message = EmailMessage()

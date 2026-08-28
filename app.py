@@ -156,6 +156,15 @@ app.config["SMTP_FROM_EMAIL"] = os.environ.get(
     app.config["SMTP_USERNAME"]
 )
 
+# ---------------------------------------
+# Resend Email API
+# ---------------------------------------
+
+app.config["RESEND_API_KEY"] = os.environ.get(
+    "RESEND_API_KEY",
+    ""
+)
+
 app.config["SHOW_DEV_OTP"] = os.environ.get(
     "ONLYEARN_SHOW_DEV_OTP",
     "false"
