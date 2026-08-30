@@ -53,6 +53,8 @@ def send_otp_email(email, name, code, subject, intro):
     """
     Send OTP email using the Resend API.
     """
+    print("RESEND DEBUG RECIPIENT:", email)
+    print("RESEND DEBUG FROM:", current_app.config.get("RESEND_FROM_EMAIL"))
 
     try:
         import resend
@@ -66,7 +68,10 @@ def send_otp_email(email, name, code, subject, intro):
         resend.api_key = api_key
 
         params = {
-            "from": "OnlyEarn <onboarding@resend.dev>",
+            "from": current_app.config.get(
+    "RESEND_FROM_EMAIL",
+    "OnlyEarn <onboarding@resend.dev>"
+),
             "to": [email],
             "subject": subject,
             "html": f"""
@@ -80,10 +85,7 @@ def send_otp_email(email, name, code, subject, intro):
                 border-radius: 16px;
             ">
 
-                <h1 style="
-                    color: #00ff88;
-                    margin-bottom: 25px;
-                ">
+                <h1 style="color: #00ff88;">
                     OnlyEarn
                 </h1>
 
@@ -106,7 +108,7 @@ def send_otp_email(email, name, code, subject, intro):
                 </div>
 
                 <p>
-                    This verification code will expire in
+                    This code will expire in
                     <strong>10 minutes</strong>.
                 </p>
 
@@ -136,93 +138,11 @@ def send_otp_email(email, name, code, subject, intro):
         return True
 
     except Exception as error:
-
         print("RESEND ERROR:", error)
-
         return False
-    try:
-
-        message = EmailMessage()
-
-        message["Subject"] = subject
-        message["From"] = sender_email
-        message["To"] = email
-
-
-        message.set_content(
-            f"""
-Hi {name},
-
-{intro}: {code}
-
-This verification code will expire in 10 minutes.
-
-OnlyEarn
-"""
-        )
-
-
-        # SSL connection (Port 465)
-        if app.config.get("SMTP_USE_SSL"):
-
-            with smtplib.SMTP_SSL(
-                smtp_host,
-                smtp_port,
-                timeout=15
-            ) as server:
-
-                if smtp_username and smtp_password:
-                    server.login(
-                        smtp_username,
-                        smtp_password
-                    )
-
-                server.send_message(message)
-
-
-        # TLS connection (Port 587)
-        else:
-
-            with smtplib.SMTP(
-                smtp_host,
-                smtp_port,
-                timeout=15
-            ) as server:
-
-                server.ehlo()
-
-                server.starttls()
-
-                server.ehlo()
-
-
-                if smtp_username and smtp_password:
-                    server.login(
-                        smtp_username,
-                        smtp_password
-                    )
-
-                server.send_message(message)
-
-
-        print("EMAIL SENT SUCCESSFULLY")
-        return True
-
-
-    except Exception as error:
-
-        print(
-            "SMTP ERROR:",
-            error
-        )
-
-        return False
-
-
 
 
 def send_verification_email(email, name, code):
-
     return send_otp_email(
         email,
         name,
@@ -232,10 +152,7 @@ def send_verification_email(email, name, code):
     )
 
 
-
-
 def send_password_reset_email(email, name, code):
-
     return send_otp_email(
         email,
         name,
@@ -243,6 +160,7 @@ def send_password_reset_email(email, name, code):
         "OnlyEarn Password Reset Code",
         "Your OnlyEarn password reset code is",
     )
+
 
 def issue_verification_code(user):
 
