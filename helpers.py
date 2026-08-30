@@ -354,10 +354,34 @@ def login_required(view):
     @wraps(view)
     def wrapped_view(*args, **kwargs):
 
-        if not session.get("user_id"):
+        user_id = session.get("user_id")
+
+        if not user_id:
 
             flash(
                 "Please log in to continue.",
+                "warning",
+            )
+
+            return redirect(
+                url_for("auth.login")
+            )
+
+        user = get_db().execute(
+            """
+            SELECT id
+            FROM users
+            WHERE id = ?
+            """,
+            (user_id,),
+        ).fetchone()
+
+        if not user:
+
+            session.clear()
+
+            flash(
+                "Your session is no longer valid. Please log in again.",
                 "warning",
             )
 
