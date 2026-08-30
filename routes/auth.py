@@ -1,12 +1,14 @@
 import json
 import sqlite3
 import re
+
 from datetime import datetime
 from uuid import uuid4
+
 from extensions import limiter
+
 from flask import (
     Blueprint,
-    current_app,
     flash,
     redirect,
     render_template,
@@ -19,7 +21,9 @@ from werkzeug.security import (
     generate_password_hash,
     check_password_hash,
 )
+
 from database import get_db
+
 from utils import (
     generate_otp,
     otp_expiry,
@@ -66,19 +70,46 @@ def register():
 
     if request.method == "POST":
 
-        name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "")
+        name = request.form.get(
+            "name",
+            ""
+        ).strip()
+
+        email = request.form.get(
+            "email",
+            ""
+        ).strip().lower()
+
+        password = request.form.get(
+            "password",
+            ""
+        )
 
         if not name or not email or not password:
-            flash("All fields are required.", "warning")
-            return redirect(url_for("auth.register"))
 
-        password_error = validate_password(password)
+            flash(
+                "All fields are required.",
+                "warning"
+            )
+
+            return redirect(
+                url_for("auth.register")
+            )
+
+        password_error = validate_password(
+            password
+        )
 
         if password_error:
-            flash(password_error, "warning")
-            return redirect(url_for("auth.register"))
+
+            flash(
+                password_error,
+                "warning"
+            )
+
+            return redirect(
+                url_for("auth.register")
+            )
 
         db = get_db()
 
@@ -102,7 +133,6 @@ def register():
                 ),
             )
 
-
             db.execute(
                 """
                 INSERT INTO wallets
@@ -111,12 +141,12 @@ def register():
                 )
                 VALUES (?)
                 """,
-                (cursor.lastrowid,),
+                (
+                    cursor.lastrowid,
+                ),
             )
 
-
             db.commit()
-
 
         except sqlite3.IntegrityError:
 
@@ -129,47 +159,51 @@ def register():
                 url_for("auth.register")
             )
 
-
         user = db.execute(
             """
             SELECT *
             FROM users
-            WHERE id=?
+            WHERE id = ?
             """,
-            (cursor.lastrowid,),
+            (
+                cursor.lastrowid,
+            ),
         ).fetchone()
-
 
         session.clear()
 
-        session["pending_verification_user_id"] = user["id"]
+        session[
+            "pending_verification_user_id"
+        ] = user["id"]
 
         issue_verification_code(user)
-
 
         return redirect(
             url_for("auth.verify_email")
         )
-
 
     return render_template(
         "auth/register.html"
     )
 
 
-
 # -------------------------
 # VERIFY EMAIL
 # -------------------------
 
-@auth_bp.route("/verify-email", methods=["GET", "POST"])
-@limiter.limit("5 per 15 minutes", methods=["POST"])
+@auth_bp.route(
+    "/verify-email",
+    methods=["GET", "POST"]
+)
+@limiter.limit(
+    "5 per 15 minutes",
+    methods=["POST"]
+)
 def verify_email():
 
     user_id = session.get(
         "pending_verification_user_id"
     )
-
 
     if not user_id:
 
@@ -182,18 +216,18 @@ def verify_email():
             url_for("auth.register")
         )
 
-
     db = get_db()
 
     user = db.execute(
         """
         SELECT *
         FROM users
-        WHERE id=?
+        WHERE id = ?
         """,
-        (user_id,),
+        (
+            user_id,
+        ),
     ).fetchone()
-
 
     if not user:
 
@@ -208,7 +242,6 @@ def verify_email():
             url_for("auth.register")
         )
 
-
     if user["email_verified"]:
 
         session.pop(
@@ -220,14 +253,12 @@ def verify_email():
             url_for("auth.login")
         )
 
-
     if request.method == "POST":
 
         code = request.form.get(
             "code",
             ""
         ).strip()
-
 
         if not user["verification_expires"]:
 
@@ -240,11 +271,9 @@ def verify_email():
                 url_for("auth.verify_email")
             )
 
-
         expires = datetime.fromisoformat(
             user["verification_expires"]
         )
-
 
         if datetime.utcnow() > expires:
 
@@ -256,7 +285,6 @@ def verify_email():
             return redirect(
                 url_for("auth.verify_email")
             )
-
 
         if (
             user["verification_code"]
@@ -271,48 +299,51 @@ def verify_email():
                 """
                 UPDATE users
                 SET
-                    email_verified=1,
-                    verification_code=NULL,
-                    verification_expires=NULL
-                WHERE id=?
+                    email_verified = 1,
+                    verification_code = NULL,
+                    verification_expires = NULL
+                WHERE id = ?
                 """,
-                (user["id"],),
+                (
+                    user["id"],
+                ),
             )
 
             db.commit()
 
-
             session.clear()
-
 
             flash(
                 "Email verified successfully.",
                 "success"
             )
 
-
             return redirect(
                 url_for("auth.login")
             )
-
 
         flash(
             "Invalid verification code.",
             "danger"
         )
 
-
     return render_template(
-    "auth/verify_email.html",
-    user=user
-)
+        "auth/verify_email.html",
+        user=user
+    )
+
 
 # -------------------------
 # RESEND VERIFICATION CODE
 # -------------------------
 
-@auth_bp.route("/resend-verification", methods=["POST"])
-@limiter.limit("3 per 15 minutes")
+@auth_bp.route(
+    "/resend-verification",
+    methods=["POST"]
+)
+@limiter.limit(
+    "3 per 15 minutes"
+)
 def resend_verification():
 
     user_id = session.get(
@@ -330,18 +361,18 @@ def resend_verification():
             url_for("auth.register")
         )
 
-
     db = get_db()
 
     user = db.execute(
         """
         SELECT *
         FROM users
-        WHERE id=?
+        WHERE id = ?
         """,
-        (user_id,),
+        (
+            user_id,
+        ),
     ).fetchone()
-
 
     if not user:
 
@@ -356,7 +387,6 @@ def resend_verification():
             url_for("auth.register")
         )
 
-
     if user["email_verified"]:
 
         session.pop(
@@ -368,20 +398,25 @@ def resend_verification():
             url_for("auth.login")
         )
 
-
     issue_verification_code(user)
-
 
     return redirect(
         url_for("auth.verify_email")
     )
 
+
 # -------------------------
 # LOGIN
 # -------------------------
 
-@auth_bp.route("/login", methods=["GET", "POST"])
-@limiter.limit("5 per 15 minutes", methods=["POST"])
+@auth_bp.route(
+    "/login",
+    methods=["GET", "POST"]
+)
+@limiter.limit(
+    "5 per 15 minutes",
+    methods=["POST"]
+)
 def login():
 
     if request.method == "POST":
@@ -391,12 +426,10 @@ def login():
             ""
         ).strip().lower()
 
-
         password = request.form.get(
             "password",
             ""
         )
-
 
         db = get_db()
 
@@ -404,17 +437,17 @@ def login():
             """
             SELECT *
             FROM users
-            WHERE email=?
+            WHERE email = ?
             """,
-            (email,),
+            (
+                email,
+            ),
         ).fetchone()
-
 
         if user and check_password_hash(
             user["password"],
             password
         ):
-
 
             if not user["email_verified"]:
 
@@ -426,50 +459,54 @@ def login():
 
                 issue_verification_code(user)
 
-
                 return redirect(
                     url_for("auth.verify_email")
                 )
-
 
             session.clear()
 
             session["user_id"] = user["id"]
             session["user_name"] = user["name"]
 
-
             flash(
                 "Welcome back.",
                 "success"
             )
 
-
             return redirect(
-                 url_for("dashboard.dashboard")
-                )
-
+                url_for("dashboard.dashboard")
+            )
 
         flash(
             "Invalid email or password.",
             "danger"
         )
 
-
     return render_template(
         "auth/login.html"
     )
+
 
 # -------------------------
 # FORGOT PASSWORD
 # -------------------------
 
-@auth_bp.route("/forgot-password", methods=["GET", "POST"])
-@limiter.limit("5 per 15 minutes", methods=["POST"])
+@auth_bp.route(
+    "/forgot-password",
+    methods=["GET", "POST"]
+)
+@limiter.limit(
+    "5 per 15 minutes",
+    methods=["POST"]
+)
 def forgot_password():
 
     if request.method == "POST":
 
-        email = request.form.get("email", "").strip().lower()
+        email = request.form.get(
+            "email",
+            ""
+        ).strip().lower()
 
         db = get_db()
 
@@ -479,17 +516,33 @@ def forgot_password():
             FROM users
             WHERE email = ?
             """,
-            (email,)
+            (
+                email,
+            )
         ).fetchone()
 
         if user:
 
+            print(
+                "PASSWORD RESET USER FOUND:",
+                user["email"]
+            )
+
+            # ---------------------------------
+            # Generate reset code
+            # ---------------------------------
+
             code = generate_otp()
+
+            # ---------------------------------
+            # Store hashed reset code
+            # ---------------------------------
 
             db.execute(
                 """
                 UPDATE users
-                SET password_reset_code = ?,
+                SET
+                    password_reset_code = ?,
                     password_reset_expires = ?
                 WHERE id = ?
                 """,
@@ -502,21 +555,63 @@ def forgot_password():
 
             db.commit()
 
-            send_password_reset_email(
+            # ---------------------------------
+            # Send reset email
+            # ---------------------------------
+
+            print(
+                "PASSWORD RESET: CALLING RESEND FOR:",
+                user["email"]
+            )
+
+            email_sent = send_password_reset_email(
                 user["email"],
                 user["name"],
                 code
             )
 
-            session["reset_email"] = user["email"]
+            print(
+                "PASSWORD RESET EMAIL RESULT:",
+                email_sent
+            )
+
+            # ---------------------------------
+            # Only create reset session if
+            # the email request was successful.
+            # ---------------------------------
+
+            if email_sent:
+
+                session["reset_email"] = user["email"]
+
+            else:
+
+                # Do not leave a usable reset
+                # session when the email failed.
+
+                session.pop(
+                    "reset_email",
+                    None
+                )
+
+        # ---------------------------------
+        # Do not reveal whether the email
+        # exists in the database.
+        # ---------------------------------
 
         flash(
             "If the email exists, a password reset code has been sent.",
             "success"
         )
 
+        if user and email_sent:
+
+            return redirect(
+                url_for("auth.reset_password")
+            )
+
         return redirect(
-            url_for("auth.reset_password")
+            url_for("auth.forgot_password")
         )
 
     return render_template(
@@ -528,17 +623,27 @@ def forgot_password():
 # RESET PASSWORD
 # -------------------------
 
-@auth_bp.route("/reset-password", methods=["GET", "POST"])
-@limiter.limit("10 per 15 minutes", methods=["POST"])
+@auth_bp.route(
+    "/reset-password",
+    methods=["GET", "POST"]
+)
+@limiter.limit(
+    "10 per 15 minutes",
+    methods=["POST"]
+)
 def reset_password():
 
-    email = session.get("reset_email")
+    email = session.get(
+        "reset_email"
+    )
 
     if not email:
+
         flash(
             "Please request a password reset first.",
             "warning"
         )
+
         return redirect(
             url_for("auth.forgot_password")
         )
@@ -551,14 +656,23 @@ def reset_password():
         FROM users
         WHERE email = ?
         """,
-        (email,)
+        (
+            email,
+        )
     ).fetchone()
 
     if not user:
+
+        session.pop(
+            "reset_email",
+            None
+        )
+
         flash(
             "User not found.",
             "danger"
         )
+
         return redirect(
             url_for("auth.forgot_password")
         )
@@ -575,81 +689,133 @@ def reset_password():
             ""
         )
 
+        # ---------------------------------
         # Password security validation
-        password_error = validate_password(new_password)
+        # ---------------------------------
+
+        password_error = validate_password(
+            new_password
+        )
 
         if password_error:
+
             flash(
                 password_error,
                 "warning"
             )
+
             return render_template(
                 "auth/reset_password.html"
             )
 
-        # Make sure a reset code exists
-        if not user["password_reset_code"] or not code:
+        # ---------------------------------
+        # Make sure reset code exists
+        # ---------------------------------
+
+        if (
+            not user["password_reset_code"]
+            or not code
+        ):
+
             flash(
                 "Invalid reset code.",
                 "danger"
             )
+
             return render_template(
                 "auth/reset_password.html"
             )
 
+        # ---------------------------------
         # Verify reset code
+        # ---------------------------------
+
         if not check_password_hash(
             user["password_reset_code"],
             code
         ):
+
             flash(
                 "Invalid reset code.",
                 "danger"
             )
+
             return render_template(
                 "auth/reset_password.html"
             )
 
+        # ---------------------------------
         # Make sure expiration exists
+        # ---------------------------------
+
         if not user["password_reset_expires"]:
+
             flash(
                 "Reset code expired.",
                 "danger"
             )
+
+            session.pop(
+                "reset_email",
+                None
+            )
+
             return redirect(
                 url_for("auth.forgot_password")
             )
 
+        # ---------------------------------
         # Check expiration
-        if datetime.fromisoformat(
-            user["password_reset_expires"]
-        ) < datetime.utcnow():
+        # ---------------------------------
+
+        if (
+            datetime.fromisoformat(
+                user["password_reset_expires"]
+            )
+            < datetime.utcnow()
+        ):
+
             flash(
                 "Reset code expired.",
                 "danger"
             )
+
+            session.pop(
+                "reset_email",
+                None
+            )
+
             return redirect(
                 url_for("auth.forgot_password")
             )
 
-        # Update password and invalidate reset code
+        # ---------------------------------
+        # Update password
+        # ---------------------------------
+
         db.execute(
             """
             UPDATE users
-            SET password = ?,
+            SET
+                password = ?,
                 password_reset_code = NULL,
                 password_reset_expires = NULL
             WHERE id = ?
             """,
             (
-                generate_password_hash(new_password),
+                generate_password_hash(
+                    new_password
+                ),
                 user["id"],
             )
         )
 
         db.commit()
 
+        # ---------------------------------
         # Remove reset session
+        # ---------------------------------
+
         session.pop(
             "reset_email",
             None
@@ -667,12 +833,16 @@ def reset_password():
     return render_template(
         "auth/reset_password.html"
     )
+
+
 # -------------------------
 # LOGOUT
 # -------------------------
 
-
-@auth_bp.route("/logout", methods=["POST"])
+@auth_bp.route(
+    "/logout",
+    methods=["POST"]
+)
 def logout():
 
     session.clear()
