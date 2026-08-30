@@ -12,6 +12,7 @@ from flask import (
 )
 
 from werkzeug.utils import secure_filename
+from PIL import Image
 
 from database import get_db
 
@@ -417,10 +418,44 @@ def save_product_image(file):
         file.filename
     )
 
+    if not filename or "." not in filename:
+
+        flash(
+            "Invalid image file.",
+            "warning",
+        )
+
+        return None
+
     ext = filename.rsplit(
         ".",
         1,
     )[1].lower()
+
+    try:
+
+        image = Image.open(file.stream)
+
+        image.verify()
+
+        if image.format.lower() not in {
+            "png",
+            "jpeg",
+            "gif",
+            "webp",
+        }:
+            raise ValueError("Unsupported image format.")
+
+        file.stream.seek(0)
+
+    except Exception:
+
+        flash(
+            "Invalid or corrupted image file.",
+            "warning",
+        )
+
+        return None
 
     new_name = (
         f"{uuid4().hex}.{ext}"
