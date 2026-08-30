@@ -108,6 +108,7 @@ def add_to_cart(product_id):
     "/cart/update/<int:product_id>",
     methods=["POST"]
 )
+@login_required
 def update_cart(product_id):
 
     cart_data = get_cart()
@@ -146,6 +147,7 @@ def update_cart(product_id):
     "/cart/remove/<int:product_id>",
     methods=["POST"]
 )
+@login_required
 def remove_from_cart(product_id):
 
     cart_data = get_cart()
