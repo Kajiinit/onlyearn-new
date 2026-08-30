@@ -521,6 +521,13 @@ def forgot_password():
             )
         ).fetchone()
 
+        print(
+    "PASSWORD RESET LOOKUP:",
+    email,
+    "FOUND:",
+    bool(user)
+)
+
         if user:
 
             print(
