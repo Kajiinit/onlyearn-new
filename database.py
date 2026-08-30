@@ -394,6 +394,125 @@ def init_db():
     """)
 
 
+
+    # -------------------------------
+    # WALLET ASSETS
+    # -------------------------------
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS wallet_assets (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            user_id INTEGER NOT NULL,
+
+            currency TEXT NOT NULL,
+
+            balance REAL DEFAULT 0,
+
+            pending REAL DEFAULT 0,
+
+            lifetime_earnings REAL DEFAULT 0,
+
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+
+            updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+
+            UNIQUE(user_id, currency),
+
+            FOREIGN KEY(user_id)
+            REFERENCES users(id)
+
+        )
+    """)
+
+
+    # -------------------------------
+    # WALLET TRANSACTIONS
+    # -------------------------------
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS wallet_transactions (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            user_id INTEGER NOT NULL,
+
+            transaction_type TEXT NOT NULL,
+
+            currency TEXT NOT NULL,
+
+            amount REAL NOT NULL,
+
+            balance_after REAL,
+
+            status TEXT DEFAULT 'completed',
+
+            reference_type TEXT,
+
+            reference_id INTEGER,
+
+            description TEXT,
+
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY(user_id)
+            REFERENCES users(id)
+
+        )
+    """)
+
+
+    # -------------------------------
+    # EXCHANGE TRANSACTIONS
+    # -------------------------------
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS exchange_transactions (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            user_id INTEGER NOT NULL,
+
+            from_currency TEXT NOT NULL,
+
+            from_amount REAL NOT NULL,
+
+            to_currency TEXT NOT NULL,
+
+            to_amount REAL NOT NULL,
+
+            exchange_rate REAL NOT NULL,
+
+            fee REAL DEFAULT 0,
+
+            status TEXT DEFAULT 'completed',
+
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY(user_id)
+            REFERENCES users(id)
+
+        )
+    """)
+
+
+    # -------------------------------
+    # WALLET INDEXES
+    # -------------------------------
+
+    cursor.execute("""
+        CREATE INDEX IF NOT EXISTS idx_wallet_transactions_user
+        ON wallet_transactions(user_id)
+    """)
+
+
+    cursor.execute("""
+        CREATE INDEX IF NOT EXISTS idx_exchange_transactions_user
+        ON exchange_transactions(user_id)
+    """)
+
+
     db.commit()
 
     db.close()

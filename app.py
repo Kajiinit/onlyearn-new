@@ -46,11 +46,21 @@ app = Flask(
         "static"
     )
 )
+
 limiter.init_app(app)
 
-app.config["SECRET_KEY"] = os.environ.get(
-    "ONLYEARN_SECRET_KEY",
-    "change-this-secret-key"
+secret_key = os.environ.get("ONLYEARN_SECRET_KEY")
+
+if not secret_key:
+    raise RuntimeError(
+        "ONLYEARN_SECRET_KEY is not configured."
+    )
+
+app.config["SECRET_KEY"] = secret_key
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = (
+    os.environ.get("ONLYEARN_PRODUCTION", "0") == "1"
 )
 
 csrf = CSRFProtect(app)
@@ -174,6 +184,17 @@ app.config["SHOW_DEV_OTP"] = os.environ.get(
     "yes"
 }
 
+@app.after_request
+def add_security_headers(response):
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = (
+        "camera=(), microphone=(), geolocation=()"
+    )
+
+    return response
+
 # ---------------------------------------
 # Optional packages
 # ---------------------------------------
@@ -258,8 +279,8 @@ with app.app_context():
 # ---------------------------------------
 
 if __name__ == "__main__":
-
     app.run(
-        debug=True,
-        port=5001
+        host="127.0.0.1",
+        port=5001,
+       debug=os.environ.get("FLASK_DEBUG", "0") == "1",
     )

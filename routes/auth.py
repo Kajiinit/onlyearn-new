@@ -1,5 +1,6 @@
 import json
 import sqlite3
+import re
 from datetime import datetime
 from uuid import uuid4
 from extensions import limiter
@@ -31,6 +32,31 @@ auth_bp = Blueprint("auth", __name__)
 
 
 # -------------------------
+# PASSWORD SECURITY
+# -------------------------
+
+def validate_password(password):
+    """Validate OnlyEarn's minimum password security requirements."""
+
+    if len(password) < 12:
+        return "Password must be at least 12 characters long."
+
+    if not re.search(r"[A-Z]", password):
+        return "Password must contain at least one uppercase letter."
+
+    if not re.search(r"[a-z]", password):
+        return "Password must contain at least one lowercase letter."
+
+    if not re.search(r"\d", password):
+        return "Password must contain at least one number."
+
+    if not re.search(r"[^A-Za-z0-9]", password):
+        return "Password must contain at least one special character."
+
+    return None
+
+
+# -------------------------
 # REGISTER
 # -------------------------
 
@@ -46,6 +72,12 @@ def register():
 
         if not name or not email or not password:
             flash("All fields are required.", "warning")
+            return redirect(url_for("auth.register"))
+
+        password_error = validate_password(password)
+
+        if password_error:
+            flash(password_error, "warning")
             return redirect(url_for("auth.register"))
 
         db = get_db()
@@ -543,10 +575,12 @@ def reset_password():
             ""
         )
 
-        # Password length validation
-        if len(new_password) < 8:
+        # Password security validation
+        password_error = validate_password(new_password)
+
+        if password_error:
             flash(
-                "Password must be at least 8 characters long.",
+                password_error,
                 "warning"
             )
             return render_template(

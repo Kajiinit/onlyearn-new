@@ -11,6 +11,7 @@ from flask import (
 )
 
 from database import get_db
+from extensions import limiter
 from decorators import login_required
 
 
@@ -85,6 +86,7 @@ def jobs():
     "/jobs/create",
     methods=["GET", "POST"]
 )
+@limiter.limit("10 per 15 minutes", methods=["POST"])
 @login_required
 def create_job():
 
@@ -167,6 +169,7 @@ def create_job():
     "/jobs/<int:job_id>/apply",
     methods=["POST"]
 )
+@limiter.limit("20 per 15 minutes", methods=["POST"])
 @login_required
 def apply_to_job(job_id):
 
@@ -458,6 +461,7 @@ def edit_job(job_id):
     "/jobs/<int:job_id>/delete",
     methods=["POST"]
 )
+@limiter.limit("10 per 15 minutes", methods=["POST"])
 @login_required
 def delete_job(job_id):
 
