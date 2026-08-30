@@ -9,6 +9,7 @@ from flask import (
 )
 
 from database import get_db
+from helpers import login_required
 
 
 advice_bp = Blueprint(
