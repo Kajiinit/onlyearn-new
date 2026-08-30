@@ -215,6 +215,7 @@ def advisor_profile(advisor_id):
     "/become-advisor",
     methods=["GET", "POST"]
 )
+@login_required
 def become_advisor():
 
     user = get_current_user()
