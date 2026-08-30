@@ -72,11 +72,9 @@ def checkout():
 @login_required
 def order_success(order_id):
 
-    order = order_with_items(
-        order_id
-    )
-
-
+    order, items = order_with_items(
+    order_id
+)
     if not order:
 
         flash(
@@ -88,8 +86,8 @@ def order_success(order_id):
             url_for("products.products")
         )
 
-
     return render_template(
         "onlysell/order_success.html",
-        order=order
+        order=order,
+        items=items
     )
