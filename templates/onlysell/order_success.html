@@ -1,5 +1,10 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/payments/checkout.css') }}">
 {% extends "base.html" %}
 {% block title %}Order Complete - OnlyEarn{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/onlysell/onlysell.css') }}">
+{% endblock %}
 {% block content %}
 <section class="checkout-shell">
     <article class="panel checkout-step">
@@ -30,7 +35,7 @@
             </div>
         {% endfor %}
         <div class="summary-total">
-            <span>Paid total</span>
+            <span>Order total</span>
             <strong>${{ "%.2f"|format(order.total) }}</strong>
         </div>
     </aside>
