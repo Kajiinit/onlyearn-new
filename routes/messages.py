@@ -15,38 +15,47 @@ from decorators import login_required
 messages_bp = Blueprint("messages", __name__)
 
 
-@messages_bp.route("/messages", methods=["GET", "POST"])
+# =========================================================
+# ONLYCHAT — MESSAGES
+# =========================================================
+
+@messages_bp.route(
+    "/messages",
+    methods=["GET", "POST"]
+)
 @login_required
 def messages():
 
     db = get_db()
+    user_id = session["user_id"]
+
+    # -----------------------------------------------------
+    # SEND MESSAGE
+    # -----------------------------------------------------
 
     if request.method == "POST":
 
-        receiver_id = request.form.get("receiver_id")
-        body = request.form.get("body", "").strip()
+        receiver_id_raw = request.form.get(
+            "receiver_id",
+            ""
+        ).strip()
 
-        if not receiver_id or not body:
-            flash(
-                "Choose a user and write a message.",
-                "warning"
+        body = request.form.get(
+            "body",
+            ""
+        ).strip()
+
+        # -------------------------------------------------
+        # Validate receiver ID
+        # -------------------------------------------------
+
+        try:
+
+            receiver_id = int(
+                receiver_id_raw
             )
-            return redirect(
-                url_for("messages.messages")
-            )
 
-
-        receiver = db.execute(
-            """
-            SELECT id
-            FROM users
-            WHERE id = ?
-            """,
-            (receiver_id,)
-        ).fetchone()
-
-
-        if not receiver or int(receiver_id) == session["user_id"]:
+        except (TypeError, ValueError):
 
             flash(
                 "Choose a valid receiver.",
@@ -57,37 +66,118 @@ def messages():
                 url_for("messages.messages")
             )
 
+        # -------------------------------------------------
+        # Validate message
+        # -------------------------------------------------
 
-        db.execute(
+        if not body:
+
+            flash(
+                "Write a message.",
+                "warning"
+            )
+
+            return redirect(
+                url_for("messages.messages")
+            )
+
+        # Prevent excessively large messages.
+        if len(body) > 5000:
+
+            flash(
+                "Message is too long. Maximum 5000 characters.",
+                "warning"
+            )
+
+            return redirect(
+                url_for("messages.messages")
+            )
+
+        # -------------------------------------------------
+        # Prevent messaging yourself
+        # -------------------------------------------------
+
+        if receiver_id == user_id:
+
+            flash(
+                "You cannot message yourself.",
+                "warning"
+            )
+
+            return redirect(
+                url_for("messages.messages")
+            )
+
+        # -------------------------------------------------
+        # Verify receiver exists
+        # -------------------------------------------------
+
+        receiver = db.execute(
             """
-            INSERT INTO messages
-            (
-                sender,
-                receiver,
-                body
-            )
-            VALUES (?, ?, ?)
+            SELECT id
+            FROM users
+            WHERE id = ?
             """,
-            (
-                session["user_id"],
-                receiver_id,
-                body
+            (receiver_id,)
+        ).fetchone()
+
+        if not receiver:
+
+            flash(
+                "Choose a valid receiver.",
+                "warning"
             )
-        )
 
-        db.commit()
+            return redirect(
+                url_for("messages.messages")
+            )
 
+        # -------------------------------------------------
+        # Save message
+        # -------------------------------------------------
 
-        flash(
-            "Message sent.",
-            "success"
-        )
+        try:
 
+            db.execute(
+                """
+                INSERT INTO messages
+                (
+                    sender,
+                    receiver,
+                    body
+                )
+                VALUES (?, ?, ?)
+                """,
+                (
+                    user_id,
+                    receiver_id,
+                    body
+                )
+            )
+
+            db.commit()
+
+            flash(
+                "Message sent.",
+                "success"
+            )
+
+        except Exception:
+
+            db.rollback()
+
+            flash(
+                "The message could not be sent.",
+                "danger"
+            )
 
         return redirect(
             url_for("messages.messages")
         )
 
+    # -----------------------------------------------------
+    # USERS AVAILABLE FOR MESSAGING
+    # -----------------------------------------------------
 
     users = db.execute(
         """
@@ -96,9 +186,12 @@ def messages():
         WHERE id != ?
         ORDER BY name
         """,
-        (session["user_id"],)
+        (user_id,)
     ).fetchall()
 
+    # -----------------------------------------------------
+    # MESSAGE HISTORY
+    # -----------------------------------------------------
 
     rows = db.execute(
         """
@@ -110,22 +203,25 @@ def messages():
         FROM messages
 
         JOIN users AS sender
-        ON sender.id = messages.sender
+            ON sender.id = messages.sender
 
         JOIN users AS receiver
-        ON receiver.id = messages.receiver
+            ON receiver.id = messages.receiver
 
         WHERE messages.sender = ?
-        OR messages.receiver = ?
+           OR messages.receiver = ?
 
         ORDER BY messages.id DESC
         """,
         (
-            session["user_id"],
-            session["user_id"]
+            user_id,
+            user_id
         )
     ).fetchall()
 
+    # -----------------------------------------------------
+    # RENDER
+    # -----------------------------------------------------
 
     return render_template(
         "msg/messages.html",
