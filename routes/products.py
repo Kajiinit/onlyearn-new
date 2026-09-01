@@ -213,12 +213,8 @@ def create_product():
             ""
         ).strip()
 
-        image = save_product_image(
-            request.files.get("image")
-        )
-
         # -------------------------------------------------
-        # Validate
+        # Validate fields BEFORE saving the image
         # -------------------------------------------------
 
         if not all([
@@ -236,6 +232,14 @@ def create_product():
             return redirect(
                 url_for("products.create_product")
             )
+
+        # -------------------------------------------------
+        # Save image only after validation
+        # -------------------------------------------------
+
+        image = save_product_image(
+            request.files.get("image")
+        )
 
         # -------------------------------------------------
         # Save product
