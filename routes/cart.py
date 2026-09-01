@@ -45,6 +45,7 @@ def add_to_cart(product_id):
     ).fetchone()
 
     if not product:
+
         flash(
             "Product not found.",
             "warning"
@@ -72,6 +73,28 @@ def add_to_cart(product_id):
         )
 
     # -------------------------------------------------
+    # Safe quantity handling
+    # -------------------------------------------------
+
+    try:
+
+        quantity = int(
+            request.form.get(
+                "quantity",
+                1
+            )
+        )
+
+    except (TypeError, ValueError):
+
+        quantity = 1
+
+    quantity = max(
+        quantity,
+        1
+    )
+
+    # -------------------------------------------------
     # Add to cart
     # -------------------------------------------------
 
@@ -79,16 +102,9 @@ def add_to_cart(product_id):
 
     key = str(product_id)
 
-    quantity = int(
-        request.form.get(
-            "quantity",
-            1
-        )
-    )
-
     cart_data[key] = (
         int(cart_data.get(key, 0))
-        + max(quantity, 1)
+        + quantity
     )
 
     session["cart"] = cart_data
@@ -104,6 +120,7 @@ def add_to_cart(product_id):
         or url_for("products.products")
     )
 
+
 @cart_bp.route(
     "/cart/update/<int:product_id>",
     methods=["POST"]
@@ -111,23 +128,62 @@ def add_to_cart(product_id):
 @login_required
 def update_cart(product_id):
 
-    cart_data = get_cart()
+    db = get_db()
 
-    quantity = int(
-        request.form.get(
-            "quantity",
-            1
+    # -------------------------------------------------
+    # Make sure the product actually exists
+    # -------------------------------------------------
+
+    product = db.execute(
+        """
+        SELECT id
+        FROM products
+        WHERE id = ?
+        """,
+        (product_id,)
+    ).fetchone()
+
+    if not product:
+
+        flash(
+            "Product not found.",
+            "warning"
         )
-    )
+
+        return redirect(
+            url_for("cart.cart")
+        )
+
+    # -------------------------------------------------
+    # Safe quantity handling
+    # -------------------------------------------------
+
+    try:
+
+        quantity = int(
+            request.form.get(
+                "quantity",
+                1
+            )
+        )
+
+    except (TypeError, ValueError):
+
+        quantity = 1
+
+    cart_data = get_cart()
 
     key = str(product_id)
 
     if quantity <= 0:
+
         cart_data.pop(
             key,
             None
         )
+
     else:
+
         cart_data[key] = quantity
 
     session["cart"] = cart_data
